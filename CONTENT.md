@@ -96,10 +96,13 @@ All colours, fonts, spacing, and motion timings are CSS custom properties in
 
 To tune the landing-page backdrop, edit the `CONFIG` block at the top of the
 script in **`src/components/GradientField.astro`** — how many smears, how thin
-and elongated they are, the diagonal they travel along, drift speed, and how
-strongly the cursor drags them are all there. The colours it paints with are the
-`--hero-*` properties in `tokens.css`. To remove the effect entirely, delete
-that component and its single usage in `src/pages/index.astro`.
+and elongated they are, the diagonal they travel along, and drift speed are all
+there. The pointer feel is governed by four values: `pointerEase` (how far the
+field lags behind the mouse — lower is calmer), `cursorRadius` (how local the
+ripple is), `cursorPush` (how hard it shoves), and `springBack` / `damping`
+(how slowly it settles). The colours it paints with are the `--hero-*`
+properties in `tokens.css`. To remove the effect entirely, delete that
+component and its single usage in `src/pages/index.astro`.
 
 ---
 

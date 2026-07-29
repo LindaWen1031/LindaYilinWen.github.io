@@ -3,8 +3,10 @@
  * GradientField — the smeared-paint backdrop on the landing page.
  *
  * Soft, elongated blobs of warm colour drift diagonally across a coral base,
- * blurring into one another. Moving the pointer drags the nearby colour with
- * it, so the field smears under the cursor and slowly relaxes back.
+ * blurring into one another. The pointer behaves like a hand moving through
+ * water: it eases toward where the mouse actually is, softly pushes nearby
+ * colour aside, and everything drifts back on a slow, heavily damped spring.
+ * Nothing tracks the mouse directly, so quick movements barely register.
  *
  * How it stays fast: the blobs are painted into a tiny offscreen buffer (a few
  * hundred pixels across), then upscaled by the browser and blurred in CSS.
@@ -80,16 +82,32 @@
     elongation: 9,
     /** Extra stretch picked up from motion. */
     elongationFromSpeed: 45,
+    /** Hard ceiling on stretch, so nothing ever whips into a hard line. */
+    maxElongation: 18,
     /** The diagonal every stroke travels along, in degrees. Keeping the spread
      *  narrow is what makes the field read as one deliberate gesture. */
     angleDegrees: -32,
     angleSpread: 9,
-    /** Pointer influence radius, as a fraction of the buffer's short edge. */
-    cursorRadius: 0.7,
-    /** How strongly the pointer drags colour along with it. */
-    cursorDrag: 0.6,
-    /** Velocity damping. Lower = the smear settles faster. */
-    friction: 0.94,
+    /** Pointer influence radius, as a fraction of the buffer's short edge.
+     *  Kept local: the point is a ripple around the cursor, not the whole
+     *  field heaving every time the mouse moves. */
+    cursorRadius: 0.4,
+    /** How quickly the field's idea of "where the pointer is" catches up to the
+     *  real one. Low numbers are the whole trick: the colour lags behind the
+     *  mouse instead of snapping to it, so a fast flick barely registers. */
+    pointerEase: 0.045,
+    /** How hard the pointer pushes nearby colour away from itself, per frame,
+     *  as a fraction of the buffer's short edge. Deliberately tiny — the spring
+     *  below balances it out at a displacement of only a few percent. */
+    cursorPush: 0.00035,
+    /** How firmly displaced colour is pulled back to where it belongs. Low =
+     *  a long, slow relaxation, like a pond settling. */
+    springBack: 0.011,
+    /** Damping on that return. High = no visible bounce, just a soft glide. */
+    damping: 0.9,
+    /** Ceiling on how far colour can be pushed, as a fraction of the buffer's
+     *  short edge. Stops a lingering cursor from tearing the field apart. */
+    maxDisplacement: 0.1,
     /** Opacity range for individual blobs. */
     opacityMin: 0.7,
     opacityMax: 1,
@@ -126,10 +144,18 @@
       const weights = [0.4, 0.3, 0.12, 0.18];
 
       type Blob = {
+        /** Where the blob belongs; drifts steadily and ignores the pointer. */
         x: number;
         y: number;
+        /** Its own gentle drift. Constant. */
         vx: number;
         vy: number;
+        /** How far it is currently pushed away from home, and how fast that
+         *  displacement is changing. This is the only thing the pointer moves. */
+        ox: number;
+        oy: number;
+        ovx: number;
+        ovy: number;
         r: number;
         color: string;
         alpha: number;
@@ -141,7 +167,7 @@
       let raf = 0;
       let running = false;
 
-      const pointer = { x: 0, y: 0, px: 0, py: 0, active: false };
+      const pointer = { x: 0, y: 0, tx: 0, ty: 0, active: false };
 
       const rand = (min: number, max: number) =>
         min + Math.random() * (max - min);
@@ -205,6 +231,10 @@
             y: ((row + rand(0.05, 0.95)) / rows) * h * 1.2 - h * 0.1,
             vx: Math.cos(angle) * speed,
             vy: Math.sin(angle) * speed,
+            ox: 0,
+            oy: 0,
+            ovx: 0,
+            ovy: 0,
             r: rand(CONFIG.minRadius, CONFIG.maxRadius) * short,
             color: pickColor(),
             alpha: rand(CONFIG.opacityMin, CONFIG.opacityMax),
@@ -226,49 +256,70 @@
         const short = Math.min(w, h);
         const cr = CONFIG.cursorRadius * short;
         const cr2 = cr * cr;
-        const pvx = pointer.x - pointer.px;
-        const pvy = pointer.y - pointer.py;
-        pointer.px = pointer.x;
-        pointer.py = pointer.y;
+        const maxOff = CONFIG.maxDisplacement * short;
+
+        // The field chases the real pointer rather than tracking it. Everything
+        // downstream reads this lagged position, so a fast flick of the mouse
+        // arrives as a slow swell instead of a jolt.
+        pointer.x += (pointer.tx - pointer.x) * CONFIG.pointerEase;
+        pointer.y += (pointer.ty - pointer.y) * CONFIG.pointerEase;
 
         for (const b of blobs) {
           if (!reduced) {
-            // The pointer drags nearby colour along with it.
-            if (pointer.active) {
-              const dx = b.x - pointer.x;
-              const dy = b.y - pointer.y;
-              const d2 = dx * dx + dy * dy;
-              if (d2 < cr2) {
-                const falloff = 1 - Math.sqrt(d2) / cr;
-                const pull = falloff * falloff * CONFIG.cursorDrag;
-                b.vx += pvx * pull;
-                b.vy += pvy * pull;
-              }
-            }
-
-            // Settle back toward the blob's own gentle drift.
-            const angle = Math.atan2(b.vy, b.vx);
-            b.vx = b.vx * CONFIG.friction + Math.cos(angle) * 0.004;
-            b.vy = b.vy * CONFIG.friction + Math.sin(angle) * 0.004;
-
+            // Home drifts on regardless; the pointer never touches it.
             b.x += b.vx;
             b.y += b.vy;
 
-            // Wrap generously past the edges so nothing pops into view.
             const pad = b.r;
             if (b.x < -pad) b.x = w + pad;
             if (b.x > w + pad) b.x = -pad;
             if (b.y < -pad) b.y = h + pad;
             if (b.y > h + pad) b.y = -pad;
+
+            // A soft radial push away from the pointer, strongest at the centre
+            // of its reach and fading to nothing at the edge.
+            if (pointer.active) {
+              const dx = b.x + b.ox - pointer.x;
+              const dy = b.y + b.oy - pointer.y;
+              const d2 = dx * dx + dy * dy;
+              if (d2 < cr2 && d2 > 0.0001) {
+                const d = Math.sqrt(d2);
+                const falloff = 1 - d / cr;
+                // Cubed, so the push is felt close in and dies away smoothly.
+                const push = falloff * falloff * falloff * CONFIG.cursorPush;
+                b.ovx += (dx / d) * push * short;
+                b.ovy += (dy / d) * push * short;
+              }
+            }
+
+            // Spring the displacement back toward zero, heavily damped.
+            b.ovx = (b.ovx - b.ox * CONFIG.springBack) * CONFIG.damping;
+            b.ovy = (b.ovy - b.oy * CONFIG.springBack) * CONFIG.damping;
+            b.ox += b.ovx;
+            b.oy += b.ovy;
+
+            // Cap how far colour can travel from home.
+            const off = Math.hypot(b.ox, b.oy);
+            if (off > maxOff) {
+              b.ox = (b.ox / off) * maxOff;
+              b.oy = (b.oy / off) * maxOff;
+            }
           }
 
-          const speed = Math.hypot(b.vx, b.vy);
-          const stretch =
-            CONFIG.elongation + speed * CONFIG.elongationFromSpeed;
-          const angle = Math.atan2(b.vy, b.vx);
+          // Elongation follows the blob's own drift, with only a small
+          // contribution from displacement — so pushing it around swells the
+          // stroke slightly rather than whipping it into a streak.
+          const dvx = b.vx + b.ovx * 0.35;
+          const dvy = b.vy + b.ovy * 0.35;
+          const speed = Math.hypot(dvx, dvy);
+          const stretch = Math.min(
+            CONFIG.maxElongation,
+            CONFIG.elongation + speed * CONFIG.elongationFromSpeed,
+          );
+          const angle = Math.atan2(dvy, dvx);
 
           ctx.save();
-          ctx.translate(b.x, b.y);
+          ctx.translate(b.x + b.ox, b.y + b.oy);
           ctx.rotate(angle);
           ctx.scale(stretch, 1);
 
@@ -310,11 +361,13 @@
           const nx = ((e.clientX - rect.left) / rect.width) * w;
           const ny = ((e.clientY - rect.top) / rect.height) * h;
           if (!pointer.active) {
-            pointer.px = nx;
-            pointer.py = ny;
+            // First sighting: start the lagged position under the cursor rather
+            // than sweeping it across the whole field.
+            pointer.x = nx;
+            pointer.y = ny;
           }
-          pointer.x = nx;
-          pointer.y = ny;
+          pointer.tx = nx;
+          pointer.ty = ny;
           pointer.active = true;
         },
         { passive: true },
