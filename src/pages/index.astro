@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ParticleField from '../components/ParticleField.astro';
+import GradientField from '../components/GradientField.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { site } from '../data/site';
 import { getFeaturedProjects } from '../lib/projects';
@@ -11,7 +11,7 @@ const featured = await getFeaturedProjects();
 
 <BaseLayout transparentNav>
   <section class="hero">
-    <ParticleField />
+    <GradientField />
     <div class="wrap-wide hero__inner">
       <p class="eyebrow hero__eyebrow">{site.role} · {site.org}</p>
       <h1 class="hero__statement">{site.heroStatement}</h1>
@@ -63,24 +63,14 @@ const featured = await getFeaturedProjects();
   .hero {
     position: relative;
     isolation: isolate;
-    min-height: calc(100dvh - 5rem);
+    min-height: 100dvh;
+    /* Pull up under the sticky nav so the colour runs to the top of the page. */
+    margin-block-start: calc(-1 * var(--nav-height));
     display: flex;
-    align-items: center;
-    padding-block: var(--s-7);
+    align-items: flex-end;
+    padding-block: var(--s-7) var(--s-6);
     overflow: hidden;
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: radial-gradient(
-      120% 80% at 50% 0%,
-      var(--accent-wash) 0%,
-      transparent 55%
-    );
-    opacity: 0.7;
+    color: var(--hero-ink);
   }
 
   .hero__inner {
@@ -93,20 +83,23 @@ const featured = await getFeaturedProjects();
   }
 
   .hero__eyebrow {
-    color: var(--ink-soft);
+    color: var(--hero-ink-soft);
   }
 
   .hero__statement {
     max-width: 18ch;
     font-size: var(--step-4);
+    color: var(--hero-ink);
+    text-shadow: 0 1px 30px rgba(70, 32, 20, 0.28);
   }
 
   .hero__subline {
     max-width: 54ch;
-    color: var(--ink-soft);
+    color: var(--hero-ink-soft);
     font-size: var(--step-1);
     line-height: 1.55;
     margin-block-start: var(--s-2);
+    text-shadow: 0 1px 22px rgba(70, 32, 20, 0.32);
   }
 
   .hero__cue {
@@ -115,14 +108,16 @@ const featured = await getFeaturedProjects();
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
     text-decoration: none;
-    color: var(--ink-soft);
+    color: var(--hero-ink);
     width: fit-content;
-    border-bottom: 1px solid var(--accent-soft);
+    border-bottom: 1px solid var(--hero-ink-soft);
     padding-block-end: 0.35rem;
+    opacity: 0.9;
   }
 
   .hero__cue:hover {
-    color: var(--accent);
+    color: var(--hero-ink);
+    opacity: 1;
   }
 
   .work__head {

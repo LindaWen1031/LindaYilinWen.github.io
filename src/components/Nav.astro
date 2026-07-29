@@ -41,10 +41,17 @@ const items = [
     position: sticky;
     top: 0;
     z-index: 50;
+    /* A fixed height, so pages with a full-bleed hero can pull up under it by
+       exactly --nav-height and leave no sliver of background showing. */
+    height: var(--nav-height);
+    display: flex;
+    align-items: center;
     background: color-mix(in srgb, var(--paper) 82%, transparent);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid transparent;
-    transition: border-color var(--dur) var(--ease);
+    transition:
+      background var(--dur) var(--ease),
+      color var(--dur) var(--ease);
   }
 
   .nav__inner {
@@ -52,7 +59,31 @@ const items = [
     align-items: baseline;
     justify-content: space-between;
     gap: var(--s-4);
-    padding-block: var(--s-3);
+    width: 100%;
+  }
+
+  /*
+   * On the home page the nav sits over the coloured hero, so it goes
+   * transparent with light type until the reader scrolls past it.
+   */
+  :global(body[data-over-hero]) .nav {
+    background: transparent;
+    backdrop-filter: none;
+    color: var(--hero-ink);
+  }
+
+  :global(body[data-over-hero]) .nav__role {
+    color: var(--hero-ink-soft);
+  }
+
+  :global(body[data-over-hero]) .nav__list a {
+    color: var(--hero-ink-soft);
+  }
+
+  :global(body[data-over-hero]) .nav__list a:hover,
+  :global(body[data-over-hero]) .nav__list a[aria-current='page'] {
+    color: var(--hero-ink);
+    border-bottom-color: var(--hero-ink);
   }
 
   .nav__brand {

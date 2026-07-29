@@ -94,6 +94,29 @@ const ogImage = image
         );
         targets.forEach((el) => io.observe(el));
       }
+
+      // On pages with a coloured hero, tell the nav when it is still sitting
+      // over it so it can switch to light type.
+      if (document.body.hasAttribute('data-transparent-nav')) {
+        const hero = document.querySelector('.hero');
+        if (hero) {
+          const navHeight =
+            parseFloat(
+              getComputedStyle(document.documentElement).getPropertyValue(
+                '--nav-height',
+              ),
+            ) * 16 || 84;
+
+          const sync = () => {
+            const bottom = hero.getBoundingClientRect().bottom;
+            document.body.toggleAttribute('data-over-hero', bottom > navHeight);
+          };
+
+          sync();
+          window.addEventListener('scroll', sync, { passive: true });
+          window.addEventListener('resize', sync, { passive: true });
+        }
+      }
     </script>
   </body>
 </html>

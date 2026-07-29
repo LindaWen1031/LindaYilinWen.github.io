@@ -94,9 +94,11 @@ live in **`src/data/site.ts`**. Edit that one file.
 All colours, fonts, spacing, and motion timings are CSS custom properties in
 **`src/styles/tokens.css`**. Change a value there and it applies everywhere.
 
-To tune the landing-page animation, edit the `CONFIG` block at the top of the
-script in **`src/components/ParticleField.astro`** — density, dot size, drift
-speed, and cursor radius are all there. To remove the animation entirely, delete
+To tune the landing-page backdrop, edit the `CONFIG` block at the top of the
+script in **`src/components/GradientField.astro`** — how many smears, how thin
+and elongated they are, the diagonal they travel along, drift speed, and how
+strongly the cursor drags them are all there. The colours it paints with are the
+`--hero-*` properties in `tokens.css`. To remove the effect entirely, delete
 that component and its single usage in `src/pages/index.astro`.
 
 ---

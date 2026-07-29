@@ -5,22 +5,34 @@
 
 :root {
   /* ── Colour ──────────────────────────────────────────────────────────────
-     Warm, papery neutrals. Never pure white, never pure black — the warmth
-     is what keeps a restrained editorial layout from feeling clinical.      */
-  --paper: #faf7f2; /* page background */
-  --paper-sunk: #f3eee6; /* recessed panels, cards */
-  --paper-raised: #fffdf9; /* raised cards on sunk backgrounds */
-  --ink: #1f1b18; /* primary text */
-  --ink-soft: #564e46; /* secondary text */
-  --ink-faint: #8b8177; /* captions, metadata */
-  --rule: #e3dbd0; /* hairlines and borders */
-  --accent: #b4562f; /* muted terracotta — links, small emphasis */
-  --accent-soft: #d98b62; /* hover / decorative */
-  --accent-wash: #f0e2d9; /* tinted backgrounds */
+     Warm, papery neutrals drawn from the same family as the hero: sand,
+     terracotta, and a deep blue that keeps the warmth from going saccharine.
+     Never pure white, never pure black.                                     */
+  --paper: #f8f1e7; /* page background */
+  --paper-sunk: #f0e4d5; /* recessed panels, cards */
+  --paper-raised: #fdf8f1; /* raised cards on sunk backgrounds */
+  --ink: #2b211b; /* primary text */
+  --ink-soft: #5c4c41; /* secondary text */
+  --ink-faint: #90806f; /* captions, metadata */
+  --rule: #e2d4c1; /* hairlines and borders */
+  --accent: #b85c3c; /* terracotta — links, small emphasis */
+  --accent-soft: #e9a279; /* hover / decorative */
+  --accent-wash: #f2ddc9; /* tinted backgrounds */
+  --blue: #33578c; /* the deep blue from the hero, used sparingly */
+  --sand: #dcd3a2;
 
-  /* Particle field on the landing page. */
-  --particle: 180, 86, 47; /* rgb triplet, matches --accent */
-  --particle-faint: 139, 129, 119;
+  /* ── Hero field ─────────────────────────────────────────────────────────
+     The smeared-paint backdrop on the landing page. `--hero-base` is the
+     canvas it is painted on; 1–5 are the colours that drift across it.      */
+  --hero-base: #c26550;
+  --hero-base-light: #d9885f; /* top-left of the field */
+  --hero-base-deep: #a34a44; /* bottom-right of the field */
+  --hero-1: #ffe3c2; /* bright peach — the dominant smear */
+  --hero-2: #f9b98b; /* peach */
+  --hero-3: #e3d6a6; /* sand */
+  --hero-4: #9d4746; /* dusty rose shadow */
+  --hero-ink: #fff6ee; /* text sitting on the hero */
+  --hero-ink-soft: rgba(255, 246, 238, 0.86);
 
   /* ── Type ───────────────────────────────────────────────────────────────
      Fraunces: a soft, warm serif for display. Figtree: a rounded humanist
@@ -73,6 +85,7 @@
   --radius: 4px;
   --radius-lg: 10px;
   --grain-opacity: 0.035;
+  --nav-height: 5.25rem;
 }
 
 /* Anyone who has asked their OS to reduce motion gets a still site. */

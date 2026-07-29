@@ -1,0 +1,357 @@
+---
+/**
+ * GradientField — the smeared-paint backdrop on the landing page.
+ *
+ * Soft, elongated blobs of warm colour drift diagonally across a coral base,
+ * blurring into one another. Moving the pointer drags the nearby colour with
+ * it, so the field smears under the cursor and slowly relaxes back.
+ *
+ * How it stays fast: the blobs are painted into a tiny offscreen buffer (a few
+ * hundred pixels across), then upscaled by the browser and blurred in CSS.
+ * That means the per-frame work is trivial no matter how large the screen is.
+ *
+ * It is decorative: `aria-hidden`, sits behind real DOM text, and holds a
+ * single still frame for anyone who prefers reduced motion.
+ *
+ * ── TUNING ──────────────────────────────────────────────────────────────────
+ * Every dial lives in the CONFIG block at the top of the script below.
+ * Colours come from the `--hero-*` custom properties in src/styles/tokens.css.
+ */
+---
+
+<div class="field" aria-hidden="true">
+  <canvas id="gradient-field"></canvas>
+</div>
+
+<style>
+  .field {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: var(--hero-base);
+  }
+
+  #gradient-field {
+    /* Oversized and offset so the blur never reveals a soft edge. */
+    position: absolute;
+    top: -12%;
+    left: -12%;
+    width: 124%;
+    height: 124%;
+    display: block;
+    filter: blur(12px) saturate(1.12);
+    opacity: 0;
+    transition: opacity 1400ms var(--ease);
+  }
+
+  #gradient-field[data-ready] {
+    opacity: 1;
+  }
+
+  /* A soft vignette keeps the headline legible over the brightest smears. */
+  .field::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(60, 30, 20, 0.14) 0%,
+      rgba(60, 30, 20, 0) 32%,
+      rgba(60, 30, 20, 0.2) 100%
+    );
+  }
+</style>
+
+<script>
+  // ── CONFIG ────────────────────────────────────────────────────────────────
+  // Safe to fiddle with. Nothing below this block needs to change.
+  const CONFIG = {
+    /** How many blobs of colour. More = busier. */
+    blobCount: 11,
+    /** Longest edge of the offscreen buffer, in pixels. Small is the point. */
+    bufferSize: 340,
+    /** Blob radius as a fraction of the buffer's short edge. Keep these small:
+     *  thin strokes stretched a long way is what reads as a smear. */
+    minRadius: 0.035,
+    maxRadius: 0.085,
+    /** Drift speed, in buffer pixels per frame. */
+    driftSpeed: 0.14,
+    /** Base stretch along the direction of travel. 1 = round, higher = smeared. */
+    elongation: 9,
+    /** Extra stretch picked up from motion. */
+    elongationFromSpeed: 45,
+    /** The diagonal every stroke travels along, in degrees. Keeping the spread
+     *  narrow is what makes the field read as one deliberate gesture. */
+    angleDegrees: -32,
+    angleSpread: 9,
+    /** Pointer influence radius, as a fraction of the buffer's short edge. */
+    cursorRadius: 0.7,
+    /** How strongly the pointer drags colour along with it. */
+    cursorDrag: 0.6,
+    /** Velocity damping. Lower = the smear settles faster. */
+    friction: 0.94,
+    /** Opacity range for individual blobs. */
+    opacityMin: 0.7,
+    opacityMax: 1,
+  };
+  // ──────────────────────────────────────────────────────────────────────────
+
+  const wrap = document.querySelector<HTMLElement>('.field');
+  const canvas = document.getElementById(
+    'gradient-field',
+  ) as HTMLCanvasElement | null;
+
+  if (wrap && canvas) {
+    const ctx = canvas.getContext('2d', { alpha: false });
+
+    if (ctx) {
+      const reduced = window.matchMedia(
+        '(prefers-reduced-motion: reduce)',
+      ).matches;
+
+      const styles = getComputedStyle(document.documentElement);
+      const readColor = (name: string, fallback: string) =>
+        styles.getPropertyValue(name).trim() || fallback;
+
+      const base = readColor('--hero-base', '#c9765f');
+      const baseLight = readColor('--hero-base-light', '#d98a6b');
+      const baseDeep = readColor('--hero-base-deep', '#b2604f');
+      const palette = [
+        readColor('--hero-1', '#ffd2ab'),
+        readColor('--hero-2', '#f6b087'),
+        readColor('--hero-3', '#e3d6a6'),
+        readColor('--hero-4', '#b25c58'),
+      ];
+      // Weighted so the bright peaches dominate and sand stays occasional.
+      const weights = [0.4, 0.3, 0.12, 0.18];
+
+      type Blob = {
+        x: number;
+        y: number;
+        vx: number;
+        vy: number;
+        r: number;
+        color: string;
+        alpha: number;
+      };
+
+      let blobs: Blob[] = [];
+      let w = 0;
+      let h = 0;
+      let raf = 0;
+      let running = false;
+
+      const pointer = { x: 0, y: 0, px: 0, py: 0, active: false };
+
+      const rand = (min: number, max: number) =>
+        min + Math.random() * (max - min);
+
+      function pickColor() {
+        let roll = Math.random();
+        for (let i = 0; i < palette.length; i++) {
+          roll -= weights[i]!;
+          if (roll <= 0) return palette[i]!;
+        }
+        return palette[0]!;
+      }
+
+      /** Turns `#rrggbb` into `rgba(r, g, b, a)`. */
+      function withAlpha(hex: string, alpha: number) {
+        const v = hex.replace('#', '');
+        const full =
+          v.length === 3
+            ? v
+                .split('')
+                .map((c) => c + c)
+                .join('')
+            : v;
+        const n = parseInt(full, 16);
+        return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
+      }
+
+      function build() {
+        if (!canvas || !ctx) return;
+        const rect = wrap!.getBoundingClientRect();
+        const aspect = Math.max(0.2, rect.width) / Math.max(0.2, rect.height);
+
+        if (aspect >= 1) {
+          w = CONFIG.bufferSize;
+          h = Math.max(8, Math.round(CONFIG.bufferSize / aspect));
+        } else {
+          h = CONFIG.bufferSize;
+          w = Math.max(8, Math.round(CONFIG.bufferSize * aspect));
+        }
+
+        canvas.width = w;
+        canvas.height = h;
+
+        const short = Math.min(w, h);
+        const toRad = Math.PI / 180;
+
+        // Stratified placement: spread the strokes over a jittered grid so they
+        // never clump into a single muddy patch.
+        const cols = Math.ceil(Math.sqrt(CONFIG.blobCount * (w / h)));
+        const rows = Math.ceil(CONFIG.blobCount / cols);
+
+        blobs = Array.from({ length: CONFIG.blobCount }, (_, i) => {
+          const col = i % cols;
+          const row = Math.floor(i / cols);
+          const angle =
+            (CONFIG.angleDegrees + rand(-CONFIG.angleSpread, CONFIG.angleSpread)) *
+            toRad;
+          const speed = rand(0.55, 1) * CONFIG.driftSpeed;
+          return {
+            x: ((col + rand(0.05, 0.95)) / cols) * w * 1.2 - w * 0.1,
+            y: ((row + rand(0.05, 0.95)) / rows) * h * 1.2 - h * 0.1,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            r: rand(CONFIG.minRadius, CONFIG.maxRadius) * short,
+            color: pickColor(),
+            alpha: rand(CONFIG.opacityMin, CONFIG.opacityMax),
+          };
+        });
+      }
+
+      function draw() {
+        if (!ctx) return;
+
+        ctx.globalCompositeOperation = 'source-over';
+        const bg = ctx.createLinearGradient(0, 0, w, h);
+        bg.addColorStop(0, baseLight);
+        bg.addColorStop(0.55, base);
+        bg.addColorStop(1, baseDeep);
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, w, h);
+
+        const short = Math.min(w, h);
+        const cr = CONFIG.cursorRadius * short;
+        const cr2 = cr * cr;
+        const pvx = pointer.x - pointer.px;
+        const pvy = pointer.y - pointer.py;
+        pointer.px = pointer.x;
+        pointer.py = pointer.y;
+
+        for (const b of blobs) {
+          if (!reduced) {
+            // The pointer drags nearby colour along with it.
+            if (pointer.active) {
+              const dx = b.x - pointer.x;
+              const dy = b.y - pointer.y;
+              const d2 = dx * dx + dy * dy;
+              if (d2 < cr2) {
+                const falloff = 1 - Math.sqrt(d2) / cr;
+                const pull = falloff * falloff * CONFIG.cursorDrag;
+                b.vx += pvx * pull;
+                b.vy += pvy * pull;
+              }
+            }
+
+            // Settle back toward the blob's own gentle drift.
+            const angle = Math.atan2(b.vy, b.vx);
+            b.vx = b.vx * CONFIG.friction + Math.cos(angle) * 0.004;
+            b.vy = b.vy * CONFIG.friction + Math.sin(angle) * 0.004;
+
+            b.x += b.vx;
+            b.y += b.vy;
+
+            // Wrap generously past the edges so nothing pops into view.
+            const pad = b.r;
+            if (b.x < -pad) b.x = w + pad;
+            if (b.x > w + pad) b.x = -pad;
+            if (b.y < -pad) b.y = h + pad;
+            if (b.y > h + pad) b.y = -pad;
+          }
+
+          const speed = Math.hypot(b.vx, b.vy);
+          const stretch =
+            CONFIG.elongation + speed * CONFIG.elongationFromSpeed;
+          const angle = Math.atan2(b.vy, b.vx);
+
+          ctx.save();
+          ctx.translate(b.x, b.y);
+          ctx.rotate(angle);
+          ctx.scale(stretch, 1);
+
+          const g = ctx.createRadialGradient(0, 0, 0, 0, 0, b.r);
+          g.addColorStop(0, withAlpha(b.color, b.alpha));
+          g.addColorStop(0.45, withAlpha(b.color, b.alpha * 0.72));
+          g.addColorStop(1, withAlpha(b.color, 0));
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.arc(0, 0, b.r, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      function frame() {
+        draw();
+        raf = requestAnimationFrame(frame);
+      }
+
+      function start() {
+        if (running || reduced) return;
+        running = true;
+        raf = requestAnimationFrame(frame);
+      }
+
+      function stop() {
+        running = false;
+        cancelAnimationFrame(raf);
+      }
+
+      // Pointer tracking lives on the window, since the canvas is behind text.
+      window.addEventListener(
+        'pointermove',
+        (e) => {
+          if (e.pointerType === 'touch') return;
+          const rect = wrap!.getBoundingClientRect();
+          if (rect.height <= 0) return;
+          const nx = ((e.clientX - rect.left) / rect.width) * w;
+          const ny = ((e.clientY - rect.top) / rect.height) * h;
+          if (!pointer.active) {
+            pointer.px = nx;
+            pointer.py = ny;
+          }
+          pointer.x = nx;
+          pointer.y = ny;
+          pointer.active = true;
+        },
+        { passive: true },
+      );
+
+      window.addEventListener('pointerleave', () => {
+        pointer.active = false;
+      });
+
+      // Pause when scrolled away or when the tab is hidden.
+      const io = new IntersectionObserver(
+        ([entry]) => {
+          if (entry?.isIntersecting && !document.hidden) start();
+          else stop();
+        },
+        { threshold: 0 },
+      );
+      io.observe(wrap);
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stop();
+        else start();
+      });
+
+      let resizeTimer = 0;
+      window.addEventListener('resize', () => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(() => {
+          build();
+          draw();
+        }, 180);
+      });
+
+      build();
+      draw();
+      canvas.setAttribute('data-ready', '');
+      start();
+    }
+  }
+</script>
