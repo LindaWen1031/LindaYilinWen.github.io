@@ -1,0 +1,256 @@
+---
+/**
+ * ParticleField — the cursor-reactive backdrop on the landing page.
+ *
+ * A field of soft, warm dots drifts slowly on its own. The pointer creates a
+ * gentle repulsion field, so the dots part around it and settle back when it
+ * leaves. Touch devices get the ambient drift without the cursor interaction.
+ *
+ * It is decorative: `aria-hidden`, sits behind real DOM text, and is skipped
+ * entirely for anyone who prefers reduced motion.
+ *
+ * ── TUNING ──────────────────────────────────────────────────────────────────
+ * Every dial lives in the CONFIG block at the top of the script below.
+ * To remove the effect altogether, delete this component and its one usage in
+ * src/pages/index.astro — nothing else depends on it.
+ */
+---
+
+<canvas id="particle-field" aria-hidden="true"></canvas>
+
+<style>
+  #particle-field {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1200ms var(--ease);
+  }
+
+  #particle-field[data-ready] {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #particle-field {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // ── CONFIG ────────────────────────────────────────────────────────────────
+  // Safe to fiddle with. Nothing below this block needs to change.
+  const CONFIG = {
+    /** Dots per 100,000 px² of canvas. Higher = denser field. */
+    density: 17,
+    /** Hard cap, so huge monitors do not melt. */
+    maxParticles: 520,
+    /** Dot radius range, in CSS pixels. */
+    minRadius: 1.1,
+    maxRadius: 2.9,
+    /** Ambient drift speed, in CSS pixels per frame. */
+    driftSpeed: 0.16,
+    /** How far from the pointer dots start to move away, in CSS pixels. */
+    cursorRadius: 165,
+    /** How hard they are pushed. Higher = more dramatic parting. */
+    cursorForce: 0.9,
+    /** How quickly a displaced dot returns home. 0–1, lower = slower. */
+    springBack: 0.022,
+    /** Velocity damping. Lower = more viscous. */
+    friction: 0.86,
+    /** Fraction of dots drawn in the accent colour rather than warm grey. */
+    accentRatio: 0.28,
+    opacityMin: 0.18,
+    opacityMax: 0.6,
+    /** Cap for high-DPI screens — 2 is plenty and keeps things fast. */
+    maxDpr: 2,
+  };
+  // ──────────────────────────────────────────────────────────────────────────
+
+  const canvas = document.getElementById(
+    'particle-field',
+  ) as HTMLCanvasElement | null;
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (canvas && !reduced) {
+    const ctx = canvas.getContext('2d', { alpha: true });
+
+    if (ctx) {
+      type Dot = {
+        homeX: number;
+        homeY: number;
+        x: number;
+        y: number;
+        vx: number;
+        vy: number;
+        driftX: number;
+        driftY: number;
+        r: number;
+        alpha: number;
+        accent: boolean;
+      };
+
+      const styles = getComputedStyle(document.documentElement);
+      const accentRgb =
+        styles.getPropertyValue('--particle').trim() || '180, 86, 47';
+      const faintRgb =
+        styles.getPropertyValue('--particle-faint').trim() || '139, 129, 119';
+
+      let dots: Dot[] = [];
+      let width = 0;
+      let height = 0;
+      let dpr = 1;
+      let raf = 0;
+      let running = false;
+
+      const pointer = { x: -9999, y: -9999, active: false };
+
+      const rand = (min: number, max: number) =>
+        min + Math.random() * (max - min);
+
+      function build() {
+        if (!canvas || !ctx) return;
+        const rect = canvas.getBoundingClientRect();
+        width = Math.max(1, rect.width);
+        height = Math.max(1, rect.height);
+        dpr = Math.min(window.devicePixelRatio || 1, CONFIG.maxDpr);
+
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        const target = Math.min(
+          CONFIG.maxParticles,
+          Math.round(((width * height) / 100_000) * CONFIG.density),
+        );
+
+        dots = Array.from({ length: target }, () => {
+          const x = Math.random() * width;
+          const y = Math.random() * height;
+          const angle = Math.random() * Math.PI * 2;
+          const speed = rand(0.3, 1) * CONFIG.driftSpeed;
+          return {
+            homeX: x,
+            homeY: y,
+            x,
+            y,
+            vx: 0,
+            vy: 0,
+            driftX: Math.cos(angle) * speed,
+            driftY: Math.sin(angle) * speed,
+            r: rand(CONFIG.minRadius, CONFIG.maxRadius),
+            alpha: rand(CONFIG.opacityMin, CONFIG.opacityMax),
+            accent: Math.random() < CONFIG.accentRatio,
+          };
+        });
+      }
+
+      function frame() {
+        if (!ctx) return;
+        ctx.clearRect(0, 0, width, height);
+
+        const cr = CONFIG.cursorRadius;
+        const cr2 = cr * cr;
+
+        for (const d of dots) {
+          // Ambient drift: the home position wanders, wrapping at the edges.
+          d.homeX += d.driftX;
+          d.homeY += d.driftY;
+          if (d.homeX < -20) d.homeX = width + 20;
+          if (d.homeX > width + 20) d.homeX = -20;
+          if (d.homeY < -20) d.homeY = height + 20;
+          if (d.homeY > height + 20) d.homeY = -20;
+
+          // Spring back toward home.
+          d.vx += (d.homeX - d.x) * CONFIG.springBack;
+          d.vy += (d.homeY - d.y) * CONFIG.springBack;
+
+          // Repulsion from the pointer, falling off smoothly with distance.
+          if (pointer.active) {
+            const dx = d.x - pointer.x;
+            const dy = d.y - pointer.y;
+            const dist2 = dx * dx + dy * dy;
+            if (dist2 < cr2 && dist2 > 0.01) {
+              const dist = Math.sqrt(dist2);
+              const falloff = 1 - dist / cr;
+              const push = falloff * falloff * CONFIG.cursorForce;
+              d.vx += (dx / dist) * push * 6;
+              d.vy += (dy / dist) * push * 6;
+            }
+          }
+
+          d.vx *= CONFIG.friction;
+          d.vy *= CONFIG.friction;
+          d.x += d.vx;
+          d.y += d.vy;
+
+          ctx.beginPath();
+          ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${d.accent ? accentRgb : faintRgb}, ${d.alpha})`;
+          ctx.fill();
+        }
+
+        raf = requestAnimationFrame(frame);
+      }
+
+      function start() {
+        if (running) return;
+        running = true;
+        raf = requestAnimationFrame(frame);
+      }
+
+      function stop() {
+        running = false;
+        cancelAnimationFrame(raf);
+      }
+
+      // Pointer tracking is on the window so the dots react even though the
+      // canvas itself is pointer-events: none.
+      window.addEventListener(
+        'pointermove',
+        (e) => {
+          if (e.pointerType === 'touch') return;
+          const rect = canvas.getBoundingClientRect();
+          pointer.x = e.clientX - rect.left;
+          pointer.y = e.clientY - rect.top;
+          pointer.active = true;
+        },
+        { passive: true },
+      );
+
+      window.addEventListener('pointerleave', () => {
+        pointer.active = false;
+      });
+
+      // Pause when scrolled away or when the tab is hidden.
+      const io = new IntersectionObserver(
+        ([entry]) => {
+          if (entry?.isIntersecting && !document.hidden) start();
+          else stop();
+        },
+        { threshold: 0 },
+      );
+      io.observe(canvas);
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stop();
+        else start();
+      });
+
+      let resizeTimer = 0;
+      window.addEventListener('resize', () => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(build, 180);
+      });
+
+      build();
+      canvas.setAttribute('data-ready', '');
+      start();
+    }
+  }
+</script>

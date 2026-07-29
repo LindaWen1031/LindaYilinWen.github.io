@@ -1,0 +1,60 @@
+---
+/**
+ * Use inside a case study when you want an image to break out of the text
+ * column.
+ *
+ * Plain `.md` files support standard Markdown images:
+ *   ![Alt text](/media/my-project/photo.jpg)
+ *
+ * For a wide, captioned image, rename the file to `.mdx` and use:
+ *
+ *   import Figure from '../../components/Figure.astro';
+ *
+ *   <Figure src="/media/my-project/workshop.jpg"
+ *           alt="Participants clustering sticky notes"
+ *           caption="Synthesis session, day two."
+ *           wide />
+ */
+import { url } from '../lib/url';
+
+interface Props {
+  src: string;
+  alt: string;
+  caption?: string;
+  /** Break out past the prose column. */
+  wide?: boolean;
+}
+
+const { src, alt, caption, wide = false } = Astro.props;
+---
+
+<figure class:list={['figure', wide && 'figure--wide']}>
+  <img src={url(src)} alt={alt} loading="lazy" decoding="async" />
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .figure {
+    margin-block: var(--s-5);
+  }
+
+  .figure img {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    background: var(--paper-sunk);
+  }
+
+  .figure figcaption {
+    margin-block-start: var(--s-2);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+    max-width: 60ch;
+  }
+
+  @media (min-width: 64rem) {
+    .figure--wide {
+      width: min(72rem, calc(100vw - 2 * var(--gutter)));
+      margin-inline: calc(50% - min(36rem, (100vw - 2 * var(--gutter)) / 2));
+    }
+  }
+</style>

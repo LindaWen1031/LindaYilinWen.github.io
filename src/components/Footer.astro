@@ -1,0 +1,102 @@
+---
+import { site } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="foot">
+  <div class="wrap-wide foot__inner">
+    <div class="foot__lead">
+      <p class="eyebrow">Get in touch</p>
+      <p class="foot__pitch">
+        I am always glad to talk about AI products, research practice, or
+        working together.
+      </p>
+      {
+        site.email && (
+          <a class="foot__email" href={`mailto:${site.email}`}>
+            {site.email}
+          </a>
+        )
+      }
+    </div>
+
+    {
+      site.links.length > 0 && (
+        <nav class="foot__links" aria-label="Elsewhere">
+          <p class="eyebrow">Elsewhere</p>
+          <ul>
+            {site.links.map((l) => (
+              <li>
+                <a href={l.url} rel="me noopener" target="_blank">
+                  {l.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
+  </div>
+
+  <div class="wrap-wide foot__base">
+    <p>© {year} {site.name}</p>
+    {site.disclaimer && <p>{site.disclaimer}</p>}
+  </div>
+</footer>
+
+<style>
+  .foot {
+    margin-block-start: auto;
+    border-top: 1px solid var(--rule);
+    background: var(--paper-sunk);
+  }
+
+  .foot__inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-5);
+    justify-content: space-between;
+    padding-block: var(--s-6) var(--s-5);
+  }
+
+  .foot__lead {
+    max-width: 34ch;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+  }
+
+  .foot__pitch {
+    color: var(--ink-soft);
+  }
+
+  .foot__email {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    letter-spacing: var(--tracking-tight);
+    text-decoration-color: var(--accent-soft);
+    font-variation-settings: 'SOFT' 40, 'WONK' 1;
+    width: fit-content;
+  }
+
+  .foot__links ul {
+    list-style: none;
+    padding: 0;
+    margin: var(--s-2) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-1);
+  }
+
+  .foot__base {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    justify-content: space-between;
+    padding-block: var(--s-3) var(--s-4);
+    border-top: 1px solid var(--rule);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+</style>

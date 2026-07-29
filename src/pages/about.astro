@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout title="About" description={site.about[0]}>
+  <section class="section about">
+    <div class="wrap">
+      <p class="eyebrow">About</p>
+      <h1 class="about__title">{site.name}</h1>
+      <p class="about__role">{site.role}, {site.org}</p>
+
+      <div class="about__body">
+        {site.about.map((p) => <p>{p}</p>)}
+      </div>
+
+      {
+        site.focus.length > 0 && (
+          <section class="focus" data-reveal>
+            <p class="eyebrow">What I focus on</p>
+            <ul>
+              {site.focus.map((f) => (
+                <li>{f}</li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about {
+    padding-block: var(--s-6) var(--s-7);
+  }
+
+  .about__title {
+    font-size: var(--step-3);
+    margin-block-start: var(--s-2);
+  }
+
+  .about__role {
+    color: var(--ink-faint);
+    margin-block-start: var(--s-1);
+  }
+
+  .about__body {
+    max-width: var(--measure);
+    margin-block-start: var(--s-5);
+  }
+
+  .about__body > * + * {
+    margin-block-start: var(--s-3);
+  }
+
+  .about__body p {
+    color: var(--ink-soft);
+  }
+
+  .about__body p:first-child {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: 1.35;
+    letter-spacing: var(--tracking-tight);
+    color: var(--ink);
+    font-variation-settings: 'SOFT' 40, 'WONK' 1;
+  }
+
+  .focus {
+    margin-block-start: var(--s-6);
+    padding-block-start: var(--s-3);
+    border-top: 1px solid var(--rule);
+    max-width: var(--measure);
+  }
+
+  .focus ul {
+    list-style: none;
+    padding: 0;
+    margin: var(--s-3) 0 0;
+  }
+
+  .focus li {
+    padding-block: var(--s-2);
+    border-bottom: 1px solid var(--rule);
+    font-size: var(--step-1);
+    line-height: var(--leading-snug);
+  }
+</style>

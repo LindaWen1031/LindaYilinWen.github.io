@@ -1,0 +1,85 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   DESIGN TOKENS — the whole look of the site lives in this file.
+   Change a value here and it propagates everywhere. Nothing else to edit.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Colour ──────────────────────────────────────────────────────────────
+     Warm, papery neutrals. Never pure white, never pure black — the warmth
+     is what keeps a restrained editorial layout from feeling clinical.      */
+  --paper: #faf7f2; /* page background */
+  --paper-sunk: #f3eee6; /* recessed panels, cards */
+  --paper-raised: #fffdf9; /* raised cards on sunk backgrounds */
+  --ink: #1f1b18; /* primary text */
+  --ink-soft: #564e46; /* secondary text */
+  --ink-faint: #8b8177; /* captions, metadata */
+  --rule: #e3dbd0; /* hairlines and borders */
+  --accent: #b4562f; /* muted terracotta — links, small emphasis */
+  --accent-soft: #d98b62; /* hover / decorative */
+  --accent-wash: #f0e2d9; /* tinted backgrounds */
+
+  /* Particle field on the landing page. */
+  --particle: 180, 86, 47; /* rgb triplet, matches --accent */
+  --particle-faint: 139, 129, 119;
+
+  /* ── Type ───────────────────────────────────────────────────────────────
+     Fraunces: a soft, warm serif for display. Figtree: a rounded humanist
+     sans for everything else. Both self-hosted via @fontsource.            */
+  --font-display: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
+  --font-body: 'Figtree Variable', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', sans-serif;
+
+  /* Big jumps between steps: hero statements are genuinely large, body text
+     stays calm. Sizes are fluid between 380px and 1280px viewports.        */
+  --step--1: clamp(0.875rem, 0.85rem + 0.12vw, 0.95rem);
+  --step-0: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  --step-1: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  --step-2: clamp(1.5rem, 1.3rem + 1vw, 2.125rem);
+  --step-3: clamp(2rem, 1.6rem + 2vw, 3.25rem);
+  --step-4: clamp(2.5rem, 1.7rem + 4vw, 5.25rem);
+
+  --leading-tight: 1.08;
+  --leading-snug: 1.3;
+  --leading-body: 1.72;
+
+  --tracking-tight: -0.02em;
+  --tracking-wide: 0.14em;
+
+  /* ── Space ──────────────────────────────────────────────────────────────
+     Generous vertical rhythm — one idea per screen.                        */
+  --s-1: 0.5rem;
+  --s-2: 0.875rem;
+  --s-3: 1.375rem;
+  --s-4: 2.25rem;
+  --s-5: 3.5rem;
+  --s-6: 5.5rem;
+  --s-7: 8.5rem;
+  --s-8: 13rem;
+
+  /* ── Measure & layout ───────────────────────────────────────────────── */
+  --measure: 68ch; /* readable prose column */
+  --width-content: 46rem; /* default content column */
+  --width-wide: 72rem; /* wide sections, card grids */
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+
+  /* ── Motion ─────────────────────────────────────────────────────────────
+     Slow and quiet. Nothing bounces.                                       */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur-fast: 180ms;
+  --dur: 420ms;
+  --dur-slow: 900ms;
+
+  /* ── Misc ───────────────────────────────────────────────────────────── */
+  --radius: 4px;
+  --radius-lg: 10px;
+  --grain-opacity: 0.035;
+}
+
+/* Anyone who has asked their OS to reduce motion gets a still site. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 1ms;
+    --dur: 1ms;
+    --dur-slow: 1ms;
+  }
+}

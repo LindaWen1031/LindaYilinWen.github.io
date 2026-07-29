@@ -1,0 +1,151 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getProjects } from '../../lib/projects';
+import { themeLabels } from '../../data/site';
+
+const projects = await getProjects();
+
+// Only offer filters for themes that actually appear in the content.
+const themes = [...new Set(projects.flatMap((p) => p.data.themes))];
+---
+
+<BaseLayout
+  title="Work"
+  description="Case studies in productizing frontier AI models, leading multidisciplinary research teams, and human-centered AI practice."
+>
+  <section class="head">
+    <div class="wrap-wide">
+      <p class="eyebrow">Work</p>
+      <h1 class="head__title">Case studies</h1>
+      <p class="lede head__lede">
+        Written at a level I can share publicly: what the problem was, what we
+        decided, and what happened. Ask me for the rest over a coffee.
+      </p>
+    </div>
+  </section>
+
+  {
+    themes.length > 1 && (
+      <div class="wrap-wide">
+        <div class="filters" role="group" aria-label="Filter projects by theme">
+          <button type="button" data-filter="all" aria-pressed="true">
+            All
+          </button>
+          {themes.map((t) => (
+            <button type="button" data-filter={t} aria-pressed="false">
+              {themeLabels[t] ?? t}
+            </button>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  <section class="wrap-wide list">
+    {
+      projects.length > 0 ? (
+        <div id="project-list">
+          {projects.map((project, i) => (
+            <div class="list__item" data-themes={project.data.themes.join(' ')}>
+              <ProjectCard project={project} index={i} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p class="lede">
+          Nothing published yet. Add a Markdown file to
+          <code>src/content/projects/</code> to get started.
+        </p>
+      )
+    }
+    <p class="list__empty" hidden>No projects match that theme yet.</p>
+  </section>
+</BaseLayout>
+
+<script>
+  const buttons =
+    document.querySelectorAll<HTMLButtonElement>('.filters button');
+  const items = document.querySelectorAll<HTMLElement>('.list__item');
+  const empty = document.querySelector<HTMLElement>('.list__empty');
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter;
+      buttons.forEach((b) =>
+        b.setAttribute('aria-pressed', String(b === btn)),
+      );
+
+      let shown = 0;
+      items.forEach((item) => {
+        const themes = (item.dataset.themes ?? '').split(' ');
+        const match = filter === 'all' || themes.includes(filter ?? '');
+        item.hidden = !match;
+        if (match) shown++;
+      });
+
+      if (empty) empty.hidden = shown > 0;
+    });
+  });
+</script>
+
+<style>
+  .head {
+    padding-block: var(--s-6) var(--s-4);
+  }
+
+  .head__title {
+    font-size: var(--step-3);
+    margin-block-start: var(--s-2);
+  }
+
+  .head__lede {
+    max-width: 48ch;
+    margin-block-start: var(--s-3);
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-1);
+    padding-block: var(--s-3) var(--s-2);
+  }
+
+  .filters button {
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 0.3rem 0.9rem;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition:
+      background var(--dur-fast) var(--ease),
+      border-color var(--dur-fast) var(--ease),
+      color var(--dur-fast) var(--ease);
+  }
+
+  .filters button:hover {
+    border-color: var(--accent-soft);
+    color: var(--ink);
+  }
+
+  .filters button[aria-pressed='true'] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+
+  .list {
+    padding-block-end: var(--s-7);
+  }
+
+  #project-list {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .list__empty {
+    padding-block: var(--s-5);
+    color: var(--ink-faint);
+  }
+</style>

@@ -1,0 +1,181 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ParticleField from '../components/ParticleField.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { site } from '../data/site';
+import { getFeaturedProjects } from '../lib/projects';
+import { url } from '../lib/url';
+
+const featured = await getFeaturedProjects();
+---
+
+<BaseLayout transparentNav>
+  <section class="hero">
+    <ParticleField />
+    <div class="wrap-wide hero__inner">
+      <p class="eyebrow hero__eyebrow">{site.role} · {site.org}</p>
+      <h1 class="hero__statement">{site.heroStatement}</h1>
+      <p class="hero__subline">{site.heroSubline}</p>
+      <a class="hero__cue" href="#work">Selected work</a>
+    </div>
+  </section>
+
+  <section id="work" class="section work">
+    <div class="wrap-wide">
+      <header class="work__head" data-reveal>
+        <p class="eyebrow">Selected work</p>
+        <h2>Three projects that say the most about how I work.</h2>
+      </header>
+
+      {
+        featured.length > 0 ? (
+          <div class="work__list">
+            {featured.map((project, i) => (
+              <ProjectCard project={project} feature={i === 0} index={i} />
+            ))}
+          </div>
+        ) : (
+          <p class="lede">
+            No featured projects yet. Set <code>featured: true</code> in a
+            project's frontmatter to show it here.
+          </p>
+        )
+      }
+
+      <p class="work__more" data-reveal>
+        <a href={url('/work')}>See all work →</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section teaser">
+    <div class="wrap">
+      <div data-reveal>
+        <p class="eyebrow">About</p>
+        <p class="teaser__text">{site.about[0]}</p>
+        <p class="teaser__link"><a href={url('/about')}>More about me →</a></p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    min-height: calc(100dvh - 5rem);
+    display: flex;
+    align-items: center;
+    padding-block: var(--s-7);
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(
+      120% 80% at 50% 0%,
+      var(--accent-wash) 0%,
+      transparent 55%
+    );
+    opacity: 0.7;
+  }
+
+  .hero__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    max-width: var(--width-wide);
+  }
+
+  .hero__eyebrow {
+    color: var(--ink-soft);
+  }
+
+  .hero__statement {
+    max-width: 18ch;
+    font-size: var(--step-4);
+  }
+
+  .hero__subline {
+    max-width: 54ch;
+    color: var(--ink-soft);
+    font-size: var(--step-1);
+    line-height: 1.55;
+    margin-block-start: var(--s-2);
+  }
+
+  .hero__cue {
+    margin-block-start: var(--s-4);
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ink-soft);
+    width: fit-content;
+    border-bottom: 1px solid var(--accent-soft);
+    padding-block-end: 0.35rem;
+  }
+
+  .hero__cue:hover {
+    color: var(--accent);
+  }
+
+  .work__head {
+    max-width: 26ch;
+    margin-block-end: var(--s-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+  }
+
+  .work__head h2 {
+    font-size: var(--step-3);
+  }
+
+  .work__list {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .work__more {
+    margin-block-start: var(--s-4);
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .work__more a {
+    text-decoration: none;
+    color: var(--accent);
+  }
+
+  .teaser {
+    background: var(--paper-sunk);
+    border-top: 1px solid var(--rule);
+  }
+
+  .teaser__text {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: 1.35;
+    letter-spacing: var(--tracking-tight);
+    margin-block-start: var(--s-3);
+    font-variation-settings: 'SOFT' 40, 'WONK' 1;
+  }
+
+  .teaser__link {
+    margin-block-start: var(--s-4);
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .teaser__link a {
+    text-decoration: none;
+    color: var(--accent);
+  }
+</style>
