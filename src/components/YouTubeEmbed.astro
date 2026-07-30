@@ -1,0 +1,190 @@
+---
+/**
+ * A lazy, click-to-play YouTube embed (a "facade"): the page ships a poster
+ * image and a play button, and only loads YouTube's iframe once the visitor
+ * actually clicks. Keeps the page fast and avoids YouTube cookies on load.
+ *
+ * `id` is the YouTube video id. Leave it empty ('') and the component renders a
+ * clearly-marked placeholder — so a page can ship before the videos are uploaded.
+ * Group the ids in one constant at the top of the .mdx and pass `id={YT.x}`.
+ *
+ *   <YouTubeEmbed id={YT.demo} title="Find My Things — full demo"
+ *                 poster="/media/slug/demo-poster.png" caption="…" />
+ */
+import { url } from '../lib/url';
+
+interface Props {
+  id: string;
+  /** Accessible title — used on the play button, the iframe, and as fallback caption. */
+  title: string;
+  poster?: string;
+  caption?: string;
+  /** Break out past the prose column. */
+  wide?: boolean;
+}
+
+const { id, title, poster, caption, wide = false } = Astro.props;
+const hasId = typeof id === 'string' && id.trim().length > 0;
+---
+
+<figure class:list={['yt', wide && 'yt--wide']}>
+  {
+    hasId ? (
+      <div
+        class="yt__frame"
+        data-yt={id}
+        style={poster ? `background-image:url('${url(poster)}')` : undefined}
+      >
+        <button type="button" class="yt__play" aria-label={`Play video: ${title}`}>
+          <svg viewBox="0 0 68 48" width="68" height="48" aria-hidden="true">
+            <path
+              class="yt__play-bg"
+              d="M66.5 7.7c-.8-2.9-2.5-5.2-5.4-6C55.8.1 34 0 34 0S12.2.1 6.9 1.7c-2.9.8-4.6 3.1-5.4 6C0 13.1 0 24 0 24s0 10.9 1.5 16.3c.8 2.9 2.5 5.2 5.4 6C12.2 47.9 34 48 34 48s21.8-.1 27.1-1.7c2.9-.8 4.6-3.1 5.4-6C68 34.9 68 24 68 24s0-10.9-1.5-16.3z"
+            />
+            <path class="yt__play-tri" d="M45 24 27 14v20" />
+          </svg>
+        </button>
+      </div>
+    ) : (
+      <div class="yt__placeholder" role="img" aria-label={`Video pending upload: ${title}`}>
+        <span class="yt__placeholder-icon" aria-hidden="true">▶</span>
+        <span class="yt__placeholder-text">
+          Video pending upload
+          <small>{title}</small>
+        </span>
+      </div>
+    )
+  }
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.yt__frame[data-yt]').forEach((frame) => {
+    const btn = frame.querySelector('button');
+    btn?.addEventListener('click', () => {
+      const id = frame.dataset.yt;
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+      iframe.title = btn.getAttribute('aria-label')?.replace(/^Play video: /, '') ?? 'YouTube video';
+      iframe.allow =
+        'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen = true;
+      iframe.loading = 'lazy';
+      frame.replaceChildren(iframe);
+      frame.classList.add('yt__frame--playing');
+    });
+  });
+</script>
+
+<style>
+  .yt {
+    margin-block: var(--s-5);
+  }
+
+  .yt__frame,
+  .yt__placeholder,
+  .yt :global(iframe) {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    border-radius: var(--radius-lg);
+  }
+
+  .yt__frame {
+    position: relative;
+    display: grid;
+    place-items: center;
+    background: var(--paper-sunk) center / cover no-repeat;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  .yt__frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(11, 26, 17, 0.28);
+    transition: background var(--dur) var(--ease);
+  }
+
+  .yt__frame:hover::after {
+    background: rgba(11, 26, 17, 0.14);
+  }
+
+  .yt__play {
+    position: relative;
+    z-index: 1;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    line-height: 0;
+  }
+
+  .yt__play-bg {
+    fill: rgba(11, 26, 17, 0.75);
+    transition: fill var(--dur) var(--ease);
+  }
+
+  .yt__frame:hover .yt__play-bg {
+    fill: var(--accent);
+  }
+
+  .yt__play-tri {
+    fill: var(--hero-ink);
+  }
+
+  .yt__play:focus-visible {
+    outline: 3px solid var(--hero-ink);
+    outline-offset: 4px;
+    border-radius: var(--radius);
+  }
+
+  .yt__placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-1);
+    text-align: center;
+    padding: var(--s-4);
+    background: var(--accent-wash);
+    border: 2px dashed var(--accent-soft);
+    color: var(--ink-soft);
+  }
+
+  .yt__placeholder-icon {
+    font-size: var(--step-2);
+    color: var(--accent);
+  }
+
+  .yt__placeholder-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .yt__placeholder-text small {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: var(--step-0);
+    color: var(--ink);
+  }
+
+  .yt figcaption {
+    margin-block-start: var(--s-2);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+    max-width: 60ch;
+  }
+
+  @media (min-width: 64rem) {
+    .yt--wide {
+      width: min(72rem, calc(100vw - 2 * var(--gutter)));
+      margin-inline: calc(50% - min(36rem, (100vw - 2 * var(--gutter)) / 2));
+    }
+  }
+</style>

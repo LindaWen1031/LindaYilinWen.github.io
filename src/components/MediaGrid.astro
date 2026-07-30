@@ -1,0 +1,87 @@
+---
+/**
+ * A responsive grid wrapper for laying out several images/clips together:
+ * the 3x2 gameplay grid, the four-across training row, the 3x3 diversity grid,
+ * before/after pairs, and two/three-up still rows.
+ *
+ * Put `Figure`, `VideoFigure`, plain `<img>` or `<figure>` children inside it.
+ * Collapses to fewer columns on small screens so the rows don't break on mobile.
+ *
+ *   <MediaGrid cols={4} colsMobile={2} caption="…">
+ *     <VideoFigure … />  … four cells …
+ *   </MediaGrid>
+ */
+interface Props {
+  /** Columns on wide screens. */
+  cols: number;
+  /** Columns on narrow screens. Defaults to 1. */
+  colsMobile?: number;
+  caption?: string;
+  /** Break out past the prose column. */
+  wide?: boolean;
+}
+
+const { cols, colsMobile = 1, caption, wide = false } = Astro.props;
+---
+
+<figure class:list={['media-grid', wide && 'media-grid--wide']}>
+  <div
+    class="media-grid__cells"
+    style={`--cols:${cols};--cols-mobile:${colsMobile}`}
+  >
+    <slot />
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .media-grid {
+    margin-block: var(--s-5);
+  }
+
+  .media-grid__cells {
+    display: grid;
+    grid-template-columns: repeat(var(--cols-mobile), minmax(0, 1fr));
+    gap: var(--s-3);
+    align-items: start;
+  }
+
+  @media (min-width: 48rem) {
+    .media-grid__cells {
+      grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    }
+  }
+
+  /* Children sit flush in their cell — the grid owns the outer rhythm. */
+  .media-grid__cells > :global(*) {
+    margin: 0;
+  }
+
+  .media-grid__cells :global(img),
+  .media-grid__cells :global(video) {
+    width: 100%;
+    display: block;
+    border-radius: var(--radius-lg);
+    background: var(--paper-sunk);
+  }
+
+  .media-grid__cells :global(figcaption) {
+    margin-block-start: var(--s-1);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .media-grid > figcaption {
+    margin-block-start: var(--s-3);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+    max-width: 60ch;
+  }
+
+  @media (min-width: 64rem) {
+    .media-grid--wide {
+      width: min(72rem, calc(100vw - 2 * var(--gutter)));
+      margin-inline: calc(50% - min(36rem, (100vw - 2 * var(--gutter)) / 2));
+    }
+  }
+</style>

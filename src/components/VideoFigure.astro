@@ -1,0 +1,106 @@
+---
+/**
+ * A self-hosted `<video>` in a captioned figure.
+ *
+ * Two modes:
+ *   - loop (default):  silent, autoplaying, looping clips — muted/loop/playsinline.
+ *                      Paused automatically for anyone who prefers reduced motion,
+ *                      who then just sees the poster frame.
+ *   - controls:        a normal video with playback controls (set `controls`).
+ *
+ * Every clip is silent, so `caption` (or `label`) doubles as the text description
+ * of what happens — always provide one.
+ *
+ *   import VideoFigure from '../../components/VideoFigure.astro';
+ *
+ *   <VideoFigure src="/media/slug/clip.mp4" poster="/media/slug/clip.png"
+ *                caption="What happens in the clip." />
+ */
+import { url } from '../lib/url';
+
+interface Props {
+  src: string;
+  poster?: string;
+  caption?: string;
+  /** Accessible name for the video element. Falls back to `caption`. */
+  label?: string;
+  /** Show native controls instead of autoplaying silently. */
+  controls?: boolean;
+  /** Break out past the prose column. */
+  wide?: boolean;
+}
+
+const {
+  src,
+  poster,
+  caption,
+  label,
+  controls = false,
+  wide = false,
+} = Astro.props;
+
+const loop = !controls;
+const name = label ?? caption;
+---
+
+<figure class:list={['video-fig', wide && 'video-fig--wide']}>
+  <video
+    src={url(src)}
+    poster={poster ? url(poster) : undefined}
+    controls={controls}
+    autoplay={loop}
+    muted={loop}
+    loop={loop}
+    playsinline={loop}
+    preload={loop ? 'auto' : 'metadata'}
+    aria-label={name}
+    data-loop={loop ? '' : undefined}></video>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<script>
+  // Respect reduced-motion for autoplaying loops: pause them and show the poster.
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const apply = () => {
+    document.querySelectorAll<HTMLVideoElement>('video[data-loop]').forEach((v) => {
+      if (reduce.matches) {
+        v.autoplay = false;
+        v.pause();
+        v.removeAttribute('loop');
+        try {
+          v.currentTime = 0;
+        } catch {}
+        v.load();
+      }
+    });
+  };
+  apply();
+  reduce.addEventListener('change', apply);
+</script>
+
+<style>
+  .video-fig {
+    margin-block: var(--s-5);
+  }
+
+  .video-fig video {
+    width: 100%;
+    display: block;
+    border-radius: var(--radius-lg);
+    background: var(--paper-sunk);
+  }
+
+  .video-fig figcaption {
+    margin-block-start: var(--s-2);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+    max-width: 60ch;
+  }
+
+  @media (min-width: 64rem) {
+    .video-fig--wide {
+      width: min(72rem, calc(100vw - 2 * var(--gutter)));
+      margin-inline: calc(50% - min(36rem, (100vw - 2 * var(--gutter)) / 2));
+    }
+  }
+</style>
