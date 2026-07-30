@@ -32,16 +32,21 @@
      deeper shadow that gives the field its depth.
 
      Swapping these seven values moves the hero between moods (a warm
-     sunset wash, a cool jungle shade) without touching the component.  */
-  --hero-base: #22402b; /* the shade everything sits in */
-  --hero-base-light: #33583a; /* top-left of the field */
-  --hero-base-deep: #14291c; /* bottom-right of the field */
-  --hero-1: #cfe0a0; /* dappled light through the canopy */
-  --hero-2: #8fb862; /* soft leaf green */
-  --hero-3: #4e7f52; /* cooler mid-green */
-  --hero-4: #16301f; /* deep shadow */
+     sunset wash, a cool jungle shade) without touching the component.
+
+     One constraint if you do: light text sits on top of this, so every
+     one of these colours needs to stay dark enough to read against
+     `--hero-ink`. The brightest of them, `--hero-1`, currently clears
+     the 4.5:1 accessibility threshold with a little room to spare.     */
+  --hero-base: #17301f; /* the shade everything sits in */
+  --hero-base-light: #23412a; /* top-left of the field */
+  --hero-base-deep: #0b1a11; /* bottom-right of the field */
+  --hero-1: #4c7448; /* dappled light through the canopy */
+  --hero-2: #356150; /* soft leaf green */
+  --hero-3: #1f4c3c; /* cooler mid-green */
+  --hero-4: #0a1810; /* deep shadow */
   --hero-ink: #f4f7e9; /* text sitting on the hero */
-  --hero-ink-soft: rgba(244, 247, 233, 0.86);
+  --hero-ink-soft: rgba(244, 247, 233, 0.94);
 
   /* ── Type ───────────────────────────────────────────────────────────────
      Fraunces: a soft, warm serif for display. Figtree: a rounded humanist
