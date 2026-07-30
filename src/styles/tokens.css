@@ -4,22 +4,32 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ── Colour ──────────────────────────────────────────────────────────────
-     Warm, papery neutrals drawn from the same family as the hero: sand,
-     terracotta, and a deep blue that keeps the warmth from going saccharine.
-     Never pure white, never pure black.                                     */
-  --paper: #f8f1e7; /* page background */
-  --paper-sunk: #f0e4d5; /* recessed panels, cards */
-  --paper-raised: #fdf8f1; /* raised cards on sunk backgrounds */
-  --ink: #2b211b; /* primary text */
-  --ink-soft: #5c4c41; /* secondary text */
-  --ink-faint: #90806f; /* captions, metadata */
-  --rule: #e2d4c1; /* hairlines and borders */
-  --accent: #b85c3c; /* terracotta — links, small emphasis */
-  --accent-soft: #e9a279; /* hover / decorative */
-  --accent-wash: #f2ddc9; /* tinted backgrounds */
-  --blue: #33578c; /* the deep blue from the hero, used sparingly */
-  --sand: #dcd3a2;
+  /* ── Colour ─────────────────────────────────────────────────
+     The rest of the site is drawn from the same garden as the hero, so
+     scrolling off the canopy doesn't feel like changing websites.
+
+     The neutrals are a warm oat paper with a faint green cast rather than
+     a peachy one, and the darks are a deep forest green rather than a
+     brown — both pulled toward `--hero-base`. Moss green carries links
+     and emphasis; a deep teal, borrowed from the coolest shadow in the
+     canopy, is the sparing second voice.
+
+     Every text colour here clears 4.5:1 against both `--paper` and
+     `--paper-sunk`. Never pure white, never pure black.                 */
+  --paper: #f5f2e8; /* page background */
+  --paper-sunk: #e9e6d7; /* recessed panels, cards */
+  --paper-raised: #fbf9f2; /* raised cards on sunk backgrounds */
+  --ink: #1c2b21; /* primary text — the canopy shade, lightened */
+  --ink-soft: #4c5b4d; /* secondary text */
+  --ink-faint: #5b6960; /* captions, metadata */
+  --rule: #dcd8c6; /* hairlines and borders */
+  --accent: #2f6b45; /* moss — links, small emphasis */
+  --accent-soft: #6f9c68; /* hover / decorative */
+  --accent-wash: #e3ead9; /* tinted backgrounds */
+  /* Two spare accents, not currently used anywhere. They are here so there
+     is something to reach for that already belongs to the palette. */
+  --deep-teal: #245e5f; /* the canopy's coolest shadow */
+  --sand: #d6cf9e; /* dry grass, for warmth against all the green */
 
   /* ── Hero field ─────────────────────────────────────────────
      The soft-focus canopy on the landing page: broad, blurred shapes of
