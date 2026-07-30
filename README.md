@@ -52,7 +52,7 @@ Short version:
 | Change my name, bio, hero text, links | `src/data/site.ts` |
 | Swap an image | Drop a file in `public/media/<project>/` |
 | Change colours, fonts, spacing | `src/styles/tokens.css` |
-| Tune or remove the landing animation | `src/components/FoliageField.astro` |
+| Tune or remove the landing animation | `src/components/GradientField.astro` |
 
 You can do all of this from the GitHub website — open the file, click the
 pencil, commit. The site rebuilds itself.
@@ -81,7 +81,7 @@ src/
 ├── content.config.ts     the frontmatter schema (validated at build time)
 ├── data/site.ts          your name, bio, links             ← your content
 ├── styles/tokens.css     every colour, size, and timing    ← the whole look
-├── components/           Nav, Footer, ProjectCard, Figure, FoliageField
+├── components/           Nav, Footer, ProjectCard, Figure, GradientField
 ├── layouts/BaseLayout    the page shell, meta tags, scroll reveal
 └── pages/                home, /work, /work/[slug], /about, 404
 public/media/             project images                    ← your content

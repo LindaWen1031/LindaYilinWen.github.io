@@ -21,28 +21,27 @@
   --blue: #33578c; /* the deep blue from the hero, used sparingly */
   --sand: #dcd3a2;
 
-  /* ── Hero field ─────────────────────────────────────────────────────────
-     The monstera canopy on the landing page. `--hero-base` is the light
-     behind the leaves; `--leaf-*` are the leaves themselves.
+  /* ── Hero field ─────────────────────────────────────────────
+     The soft-focus canopy on the landing page: broad, blurred shapes of
+     light and shade drifting past each other, as if you were standing
+     under leaves rather than looking at them.
 
-     `--leaf-1..4` are the sunlit leaves sitting back in the canopy.
-     `--leaf-near-*` are the big out-of-focus leaves passing in front of you,
-     so they want to be darker — they read as leaves in their own shade.
-     Swapping these six values is all it takes to move the whole hero from
-     this warm sunset canopy to, say, a green jungle one.                    */
-  --hero-base: #c26550;
-  --hero-base-light: #d9885f; /* top-left of the field */
-  --hero-base-deep: #a34a44; /* bottom-right of the field */
-  --leaf-1: #ffe3c2; /* brightest, sun through the canopy */
-  --leaf-2: #f9b98b;
-  --leaf-3: #e3d6a6; /* sand — the occasional olive-ish leaf */
-  --leaf-4: #d98a6b;
-  --leaf-vein: #fff3e4;
-  --leaf-near-1: #7e3232; /* foreground leaves, in shade */
-  --leaf-near-2: #96432f;
-  --leaf-near-vein: #f4c9a8;
-  --hero-ink: #fff6ee; /* text sitting on the hero */
-  --hero-ink-soft: rgba(255, 246, 238, 0.86);
+     `--hero-base*` is the deep shade everything sits in. `--hero-1..4`
+     are the smears that drift across it — 1 and 2 are dappled light
+     coming through the canopy, 3 is a cooler mid-green, and 4 is the
+     deeper shadow that gives the field its depth.
+
+     Swapping these seven values moves the hero between moods (a warm
+     sunset wash, a cool jungle shade) without touching the component.  */
+  --hero-base: #22402b; /* the shade everything sits in */
+  --hero-base-light: #33583a; /* top-left of the field */
+  --hero-base-deep: #14291c; /* bottom-right of the field */
+  --hero-1: #cfe0a0; /* dappled light through the canopy */
+  --hero-2: #8fb862; /* soft leaf green */
+  --hero-3: #4e7f52; /* cooler mid-green */
+  --hero-4: #16301f; /* deep shadow */
+  --hero-ink: #f4f7e9; /* text sitting on the hero */
+  --hero-ink-soft: rgba(244, 247, 233, 0.86);
 
   /* ── Type ───────────────────────────────────────────────────────────────
      Fraunces: a soft, warm serif for display. Figtree: a rounded humanist
