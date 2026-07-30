@@ -9,15 +9,16 @@ import mdx from '@astrojs/mdx';
 //   SITE  = the origin GitHub Pages serves you from.
 //   BASE  = the subpath the site is served under.
 //
-// This repo is named LindaWen1031.github.io, so Pages serves it from the
-// root of that domain and BASE is just '/'. If the repo were named
-// something else, BASE would need to be '/<repo-name>'.
+// The '.github.io' in the repo name only buys you a root-level URL when
+// the repo is named after the account exactly — here the account is
+// LindaWen1031 and the repo is LindaYilinWen.github.io, so Pages serves
+// this as an ordinary project site under a subpath.
 //
-// Moving to a custom domain later (e.g. https://lindawen.com) means
-// changing SITE only — BASE stays '/'.
+// If you ever rename the repo to LindaWen1031.github.io, set BASE to '/'.
+// Moving to a custom domain also means SITE changes and BASE becomes '/'.
 // ─────────────────────────────────────────────────────────────────────────────
 const SITE = 'https://LindaWen1031.github.io';
-const BASE = '/';
+const BASE = '/LindaYilinWen.github.io';
 
 export default defineConfig({
   site: SITE,
