@@ -67,8 +67,13 @@ const featured = await getFeaturedProjects();
     /* Pull up under the sticky nav so the colour runs to the top of the page. */
     margin-block-start: calc(-1 * var(--nav-height));
     display: flex;
-    align-items: flex-end;
-    padding-block: var(--s-7) var(--s-6);
+    /* Centred rather than bottom-anchored: with the hero a full viewport
+       tall, anchoring to the bottom dumped all the slack above the
+       headline, and that gap grew with the height of the window. The top
+       padding clears the nav the hero sits under, so "centred" means
+       centred in the space you can actually see. */
+    align-items: center;
+    padding-block: calc(var(--nav-height) + var(--s-4)) var(--s-5);
     overflow: hidden;
     color: var(--hero-ink);
   }
