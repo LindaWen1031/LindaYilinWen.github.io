@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import GradientField from '../components/GradientField.astro';
+import FoliageField from '../components/FoliageField.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { site } from '../data/site';
 import { getFeaturedProjects } from '../lib/projects';
@@ -11,7 +11,7 @@ const featured = await getFeaturedProjects();
 
 <BaseLayout transparentNav>
   <section class="hero">
-    <GradientField />
+    <FoliageField />
     <div class="wrap-wide hero__inner">
       <p class="eyebrow hero__eyebrow">{site.role} · {site.org}</p>
       <h1 class="hero__statement">{site.heroStatement}</h1>

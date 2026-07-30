@@ -22,15 +22,25 @@
   --sand: #dcd3a2;
 
   /* ── Hero field ─────────────────────────────────────────────────────────
-     The smeared-paint backdrop on the landing page. `--hero-base` is the
-     canvas it is painted on; 1–5 are the colours that drift across it.      */
+     The monstera canopy on the landing page. `--hero-base` is the light
+     behind the leaves; `--leaf-*` are the leaves themselves.
+
+     `--leaf-1..4` are the sunlit leaves sitting back in the canopy.
+     `--leaf-near-*` are the big out-of-focus leaves passing in front of you,
+     so they want to be darker — they read as leaves in their own shade.
+     Swapping these six values is all it takes to move the whole hero from
+     this warm sunset canopy to, say, a green jungle one.                    */
   --hero-base: #c26550;
   --hero-base-light: #d9885f; /* top-left of the field */
   --hero-base-deep: #a34a44; /* bottom-right of the field */
-  --hero-1: #ffe3c2; /* bright peach — the dominant smear */
-  --hero-2: #f9b98b; /* peach */
-  --hero-3: #e3d6a6; /* sand */
-  --hero-4: #9d4746; /* dusty rose shadow */
+  --leaf-1: #ffe3c2; /* brightest, sun through the canopy */
+  --leaf-2: #f9b98b;
+  --leaf-3: #e3d6a6; /* sand — the occasional olive-ish leaf */
+  --leaf-4: #d98a6b;
+  --leaf-vein: #fff3e4;
+  --leaf-near-1: #7e3232; /* foreground leaves, in shade */
+  --leaf-near-2: #96432f;
+  --leaf-near-vein: #f4c9a8;
   --hero-ink: #fff6ee; /* text sitting on the hero */
   --hero-ink-soft: rgba(255, 246, 238, 0.86);
 

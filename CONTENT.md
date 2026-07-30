@@ -94,15 +94,21 @@ live in **`src/data/site.ts`**. Edit that one file.
 All colours, fonts, spacing, and motion timings are CSS custom properties in
 **`src/styles/tokens.css`**. Change a value there and it applies everywhere.
 
-To tune the landing-page backdrop, edit the `CONFIG` block at the top of the
-script in **`src/components/GradientField.astro`** — how many smears, how thin
-and elongated they are, the diagonal they travel along, and drift speed are all
-there. The pointer feel is governed by four values: `pointerEase` (how far the
-field lags behind the mouse — lower is calmer), `cursorRadius` (how local the
-ripple is), `cursorPush` (how hard it shoves), and `springBack` / `damping`
-(how slowly it settles). The colours it paints with are the `--hero-*`
-properties in `tokens.css`. To remove the effect entirely, delete that
-component and its single usage in `src/pages/index.astro`.
+To tune the landing-page canopy, edit the `CONFIG` block at the top of the
+script in **`src/components/FoliageField.astro`** — leaf shape (how many lobes,
+how broad the blade, how deep the splits, how often a leaf is fenestrated), the
+two depth layers (how many leaves, how large, how blurred, how strongly each
+answers the pointer), and the ambient sway all live there. The pointer feel is
+governed by four values: `pointerEase` (how far the canopy lags behind the
+mouse — lower is calmer), `cursorRadius` (how local the disturbance is),
+`cursorPush` (how hard it shoulders leaves aside), and `springBack` / `damping`
+(how slowly it settles).
+
+The colours are the `--leaf-*` and `--hero-base*` properties in `tokens.css`.
+Changing those nine values moves the whole hero between moods — a warm sunset
+canopy, a deep green jungle — without touching the component. To remove the
+effect entirely, delete that component and its single usage in
+`src/pages/index.astro`.
 
 ---
 
