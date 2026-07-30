@@ -3,7 +3,7 @@
  * Editing this file changes the site copy — you never need to touch a component.
  */
 export const site = {
-  name: 'Your Name',
+  name: 'Linda Wen',
   /** Shown under your name in the nav and on About. */
   role: 'Research Product Manager',
   org: 'Microsoft Research',
@@ -35,11 +35,13 @@ export const site = {
     'Human-centered AI practice and responsible deployment',
   ],
 
-  /** Footer contact. Leave any entry out and it simply will not render. */
+  /** Footer contact. Leave any entry out and it simply will not render.
+   *  TODO: swap in the address you actually want strangers emailing. */
   email: 'you@example.com',
   links: [
+    // TODO: your LinkedIn handle goes on the end of this URL.
     { label: 'LinkedIn', url: 'https://www.linkedin.com/in/YOUR-HANDLE' },
-    { label: 'GitHub', url: 'https://github.com/YOUR-GITHUB-USERNAME' },
+    { label: 'GitHub', url: 'https://github.com/LindaWen1031' },
     // { label: 'Google Scholar', url: 'https://scholar.google.com/citations?user=...' },
   ],
 
