@@ -35,8 +35,52 @@ export const site = {
     'Human-centered AI practice and responsible deployment',
   ],
 
-  /** Footer contact. Leave any entry out and it simply will not render.
-   *  TODO: swap in the address you actually want strangers emailing. */
+  /**
+   * Publications shown on the About page.
+   * Each entry: title, authors, venue, year, and an optional url.
+   * - Leave `url: ''` and the title renders as plain text (no dead link).
+   * - Leave the whole array `[]` and the Publications section is hidden.
+   * TODO (Linda): replace these placeholders with your real citations + links.
+   */
+  publications: [
+    {
+      title: 'TODO — paper title (e.g. the WHAM / Muse world model paper)',
+      authors: 'TODO — author list, in publication order',
+      venue: 'Nature',
+      year: '2025',
+      url: '', // TODO: paste the article/DOI URL
+    },
+    {
+      title: 'TODO — paper title (e.g. the Find My Things paper)',
+      authors: 'TODO — author list, in publication order',
+      venue: 'CHI',
+      year: '2024',
+      url: '', // TODO: paste the ACM/DOI URL
+    },
+  ],
+
+  /**
+   * News / press shown on the About page.
+   * Each entry: outlet, title, date, and an optional url.
+   * - Leave `url: ''` and the title renders as plain text (no dead link).
+   * - Leave the whole array `[]` and the News/Press section is hidden.
+   * TODO (Linda): replace these placeholders with your real press items + links.
+   */
+  press: [
+    {
+      outlet: 'TODO — outlet (e.g. Fast Company)',
+      title: 'TODO — headline (e.g. Innovation by Design Award)',
+      date: '', // TODO: e.g. '2023'
+      url: '', // TODO: paste the article URL
+    },
+    {
+      outlet: 'TODO — outlet (e.g. Microsoft Research)',
+      title: 'TODO — headline (e.g. the Find My Things story)',
+      date: '',
+      url: '',
+    },
+  ],
+
   /** Footer contact. Leave as '' to hide it; add a real address to show it. */
   email: '',
   links: [

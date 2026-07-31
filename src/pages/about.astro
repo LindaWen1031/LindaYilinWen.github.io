@@ -26,6 +26,59 @@ import { site } from '../data/site';
           </section>
         )
       }
+
+      {
+        site.publications.length > 0 && (
+          <section class="listing" data-reveal>
+            <p class="eyebrow">Publications</p>
+            <ul>
+              {site.publications.map((p) => (
+                <li class="listing__item">
+                  <p class="listing__title">
+                    {p.url ? (
+                      <a href={p.url} target="_blank" rel="noopener">
+                        {p.title}
+                      </a>
+                    ) : (
+                      p.title
+                    )}
+                  </p>
+                  {p.authors && <p class="listing__meta">{p.authors}</p>}
+                  <p class="listing__meta">
+                    {[p.venue, p.year].filter(Boolean).join(' · ')}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {
+        site.press.length > 0 && (
+          <section class="listing" data-reveal>
+            <p class="eyebrow">News &amp; press</p>
+            <ul>
+              {site.press.map((n) => (
+                <li class="listing__item">
+                  <p class="listing__title">
+                    {n.url ? (
+                      <a href={n.url} target="_blank" rel="noopener">
+                        {n.title}
+                      </a>
+                    ) : (
+                      n.title
+                    )}
+                  </p>
+                  <p class="listing__meta">
+                    {[n.outlet, n.date].filter(Boolean).join(' · ')}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
     </div>
   </section>
 </BaseLayout>
@@ -92,5 +145,42 @@ import { site } from '../data/site';
     border-bottom: 1px solid var(--rule);
     font-size: var(--step-1);
     line-height: var(--leading-snug);
+  }
+
+  .listing {
+    margin-block-start: var(--s-6);
+    padding-block-start: var(--s-3);
+    border-top: 1px solid var(--rule);
+    max-width: var(--measure);
+  }
+
+  .listing ul {
+    list-style: none;
+    padding: 0;
+    margin: var(--s-3) 0 0;
+  }
+
+  .listing__item {
+    padding-block: var(--s-3);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .listing__title {
+    font-size: var(--step-0);
+    line-height: var(--leading-snug);
+    color: var(--ink);
+  }
+
+  .listing__title a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+
+  .listing__meta {
+    margin-block-start: var(--s-1);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
   }
 </style>
