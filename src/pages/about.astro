@@ -11,7 +11,7 @@ import { site } from '../data/site';
       <p class="about__role">{site.role}, {site.org}</p>
 
       <div class="about__body">
-        {site.about.map((p) => <p>{p}</p>)}
+        {site.about.map((p) => <p set:html={p} />)}
       </div>
 
       {
@@ -56,6 +56,13 @@ import { site } from '../data/site';
 
   .about__body p {
     color: var(--ink-soft);
+  }
+
+  .about__body a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
   }
 
   .about__body p:first-child {
