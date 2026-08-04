@@ -41,7 +41,7 @@ const { prev, next } = await getNeighbours(project.id);
           </div>
           <div>
             <dt>Focus</dt>
-            <dd>{data.themes.map((t) => themeLabels[t] ?? t).join(', ')}</dd>
+            <dd>{data.focus ?? data.themes.map((t) => themeLabels[t] ?? t).join(', ')}</dd>
           </div>
         </dl>
       </div>

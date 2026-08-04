@@ -10,11 +10,11 @@ export const site = {
 
   /** The big statement on the landing page. Keep it to one or two lines. */
   heroStatement:
-    'I transform frontier research on multimodal generative AI into global-scale products that redefine how people create and interact, bridging design, user research, and strategy to deliver human-centered, delightful AI experiences.',
+    'I transform frontier research on multimodal generative AI into global-scale products that redefine how people create and interact.',
 
   /** A short supporting line under the hero statement. */
   heroSubline:
-  'I lead interdisciplinary teams in driving frontier research in world modeling, multimodal generative AI, and computer vision. I\'ve shipped AI-powered features for enterprise and consumer-facing products in Microsoft Copilot, Word, Seeing AI, and Xbox. My research insights have been published in leading academic venues such as Nature and CHI.',
+  'Hi there, welcome to my research and design portfolio. I am an AI research product manager at Microsoft Research. I lead interdisciplinary efforts in driving frontier research in world models, multimodal generative AI, and computer vision. I\'ve shipped AI-powered features for enterprise and consumer-facing products in Microsoft Copilot, Word, Seeing AI, and Xbox. My research insights have been published in leading academic venues such as Nature and CHI.',
 
   /** Used for <meta description>, search results, and link previews. */
   description:
@@ -44,18 +44,29 @@ export const site = {
    */
   publications: [
     {
-      title: 'TODO — paper title (e.g. the WHAM / Muse world model paper)',
-      authors: 'TODO — author list, in publication order',
+      title: 'World and human action models towards gameplay ideation',
+      authors:
+        'Anssi Kanervisto, Dave Bignell, Linda Yilin Wen, Martin Grayson, Raluca Georgescu, et al.',
       venue: 'Nature',
       year: '2025',
-      url: '', // TODO: paste the article/DOI URL
+      url: 'https://doi.org/10.1038/s41586-025-08600-3',
     },
     {
-      title: 'TODO — paper title (e.g. the Find My Things paper)',
-      authors: 'TODO — author list, in publication order',
-      venue: 'CHI',
+      title:
+        'Find My Things: Personalized Accessibility through Teachable AI for People who are Blind or Low Vision',
+      authors: 'Linda Yilin Wen, et al.',
+      venue: 'CHI Extended Abstracts',
       year: '2024',
-      url: '', // TODO: paste the ACM/DOI URL
+      url: 'https://doi.org/10.1145/3613905.3648641',
+    },
+    {
+      title:
+        'Understanding Personalized Accessibility through Teachable AI: Designing and Evaluating Find My Things for People who are Blind or Low Vision',
+      authors:
+        'Cecily Morrison, Martin Grayson, Rita Faia Marques, Daniela Massiceti, Camilla Longden, Linda Yilin Wen, Ed Cutrell',
+      venue: 'ACM SIGACCESS (ASSETS)',
+      year: '2023',
+      url: 'https://doi.org/10.1145/3597638.3608395',
     },
   ],
 

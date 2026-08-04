@@ -1,35 +1,37 @@
 ---
 title: 'Muse / WHAM: building a world model with creators'
 role: User discovery · Design & prototype development · Paper co-authorship · Communications
-org: Microsoft Research × Ninja Theory
-timeframe: Dec 2022 – Feb 2025
+org: Microsoft Research
+timeframe: Jan 2023 – Feb 2025
 summary: >-
-  Building Muse — the first World and Human Action Model — by co-designing with
-  game creators and grounding its evaluation metrics in what their craft needs.
+  Building Muse — the first World and Human Action Model (WHAM) — by co-designing with
+  game creators and grounding its evaluation metrics in future use cases.
 themes:
-  - design-research
-  - human-centered
-  - productization
-cover: /media/01-muse-wham-world-model/wham-demonstrator-poster.png
+    - design-research
+    - team-leadership
+    - productization
+focus: Design research, leading multidisciplinary collaboration, productizing frontier AI research
+cover: /media/01-muse-wham-world-model/omb-msr-hero.jpg
 coverAlt: >-
-  A frame from the WHAM Demonstrator: a generated Bleeding Edge gameplay moment
-  shown alongside branching continuations the model can be steered between.
+  Three Microsoft researchers in a lounge — one holding a game controller — watching a
+  large display showing a grid of six Bleeding Edge gameplay clips, with laptops and
+  prototype hardware spread across the table in front of them.
 featured: true
 order: 1
 metrics:
-  - label: Published
-    value: Nature, 2025
-  - label: Public reach
-    value: 118K+ views
-  - label: Press coverage
-    value: 55 outlets
+    - label: Published
+      value: Nature, 2025
+    - label: Public reach
+      value: 136K+ views
+    - label: Press coverage
+      value: 55 outlets
 links:
-  - label: Read the paper (Nature)
-    url: https://doi.org/10.1038/s41586-025-08600-3
-  - label: Muse / WHAM — open weights & Demonstrator
-    url: https://www.microsoft.com/en-us/research/project/wham/
-  - label: Patent — Generative Neural Application Engine
-    url: https://patents.google.com/patent/US20250190768A1
+    - label: Read the paper (Nature)
+      url: https://doi.org/10.1038/s41586-025-08600-3
+    - label: Muse / WHAM — open weights & Demonstrator
+      url: https://www.microsoft.com/en-us/research/project/wham/
+    - label: Patent — Generative Neural Application Engine
+      url: https://patents.google.com/patent/US20250190768A1
 draft: false
 ---
 
@@ -37,25 +39,39 @@ import Figure from '../../components/Figure.astro';
 import VideoFigure from '../../components/VideoFigure.astro';
 import YouTubeEmbed from '../../components/YouTubeEmbed.astro';
 import MediaGrid from '../../components/MediaGrid.astro';
+import PressLinks from '../../components/PressLinks.astro';
 
 {/*
   YOUTUBE PLACEHOLDERS — paste each 11-character video id between the quotes and
   the embed goes live. Nothing else to change.
-    cygnus       ← assets-wham/video-large/cygnus-design-probe-walkthrough.mp4 (46 MB)
-    demonstrator ← assets-wham/video-large/wham-demonstrator-walkthrough.mp4  (457 MB)
+    demonstrator   ← assets-wham/video-large/wham-demonstrator-walkthrough.mp4 (457 MB)
+    whatItProduced ← "What it produced" section explainer video
 */}
 export const YT = {
-  cygnus: '',
-  demonstrator: '',
+  demonstrator: 'DGWMIxaDXlo',
+  whatItProduced: 'pclsvLeTjjw',
 };
 
 export const M = '/media/01-muse-wham-world-model';
+
+{/*
+  PAPER & PRESS — the links shown near the top of the page. Add a news article by
+  pasting one more line; it appears automatically. No other change needed.
+*/}
+export const PRESS = [
+  { label: 'Read the paper — Nature (2025)', url: 'https://www.nature.com/articles/s41586-025-08600-3' },
+  { label: 'Microsoft Research — announcing Muse', url: 'https://www.microsoft.com/en-us/research/blog/introducing-muse-our-first-generative-ai-model-designed-for-gameplay-ideation/' },
+  // { label: 'Bloomberg — …', url: 'https://…' },
+  // { label: 'Reuters — …', url: 'https://…' },
+];
 
 {/*
   TODO (for Linda): the body uses "we" throughout. You are a co-author here (and
   first author on the CHI 2024 paper on the other case study). If you want to
   distinguish the decisions that were specifically yours, this is the place.
 */}
+
+<PressLinks eyebrow="Paper & press" links={PRESS} />
 
 ## The problem
 
@@ -72,15 +88,15 @@ This case study shows how I answered it while building Muse, the first World and
 
 ---
 
-## World and Human Action Models / Muse
+## World and Human Action Models - Muse
 
-Muse is a generative model of a video game. Given a moment of gameplay and a set of controller
+Muse is a generative model of a video game. Given a sequence of gameplay footage and a set of controller
 actions, it generates what happens next — both the visuals and the actions themselves. It learned
 the dynamics of *Bleeding Edge* from over a billion frames of human play, paired with the controller
 inputs that produced them.
 
 The clips below show gameplay sequences generated by Muse (based on WHAM-1.6B). Each was produced by
-prompting the model with 10 initial frames — one second — of human gameplay, plus the controller
+prompting the model with 10 initial frames (equivalent of one second) of human gameplay, plus the controller
 actions for the whole sequence.
 
 <MediaGrid
@@ -88,7 +104,7 @@ actions for the whole sequence.
   colsMobile={2}
   wide
   caption="Example gameplay sequences generated by Muse (WHAM-1.6B). The game world, player behaviour and NPC interactions are all generated."
->
+> 
   {[1, 2, 3, 4, 5, 6].map((n) => (
     <VideoFigure
       src={`${M}/muse-gameplay-0${n}.mp4`}
@@ -112,6 +128,13 @@ do.
 I analysed the game development landscape to identify its biggest challenges — signal on the most
 ambitious problem worth tackling.
 
+<Figure
+  src={`${M}/phase1-level-designer-workflow.png`}
+  alt="Workshop board titled 'Current workflow of a level designer', mapping the six stages a designer moves through to build a Bleeding Edge level — develop the concept, create the walkthrough, gather visual references, greybox the scene, prototype the interaction, and polish — annotated with the artefacts and prototypes produced at each stage and a set of discussion questions about the model's possible inputs and outputs."
+  caption="Mapping current practice — the stages, artefacts and open questions a level designer moves through, used to bound what the model would need to support."
+  wide
+/>
+
 ### Phase 2 — Communicate abstract concepts with concrete examples
 
 **Lo-fi design probes.** I made envisionment videos depicting how a game creator might use these
@@ -125,30 +148,12 @@ or editing one through image examples. It was deliberately imaginative and provo
 roadmap, but an artefact designed to elicit reactions and let creators respond to something concrete
 rather than a description.
 
-<MediaGrid
-  cols={2}
-  colsMobile={1}
+<VideoFigure
   wide
-  caption="Cygnus — a design probe used to elicit responses from game creators."
->
-  <Figure
-    src={`${M}/cygnus-probe-01.png`}
-    alt="A Cygnus mock-up: a game environment being generated from a line of typed text, shown in a level-editor interface."
-    caption="Generate an environment through text"
-  />
-  <Figure
-    src={`${M}/cygnus-probe-02.png`}
-    alt="A Cygnus mock-up: an existing game environment being edited by supplying example images as a reference."
-    caption="Edit an environment through image examples"
-  />
-</MediaGrid>
-
-<YouTubeEmbed
-  id={YT.cygnus}
-  title="Cygnus design probe — walkthrough"
+  src={`${M}/cygnus-probe-01.mp4`}
   poster={`${M}/cygnus-probe-01.png`}
-  wide
-  caption="A walkthrough of the Cygnus design probe — the speculative artefact that preceded the real model."
+  label="A Cygnus mock-up: a game environment being generated from a line of typed text, shown in a level-editor interface."
+  caption="Cygnus — a design probe used to elicit responses from game creators, here generating an environment from text."
 />
 
 ### Phase 3 — Co-design with creators
@@ -194,19 +199,6 @@ and divergent thinking** — quickly trying out an idea, tweaking it, and iterat
 > experiences."
 > — P3, Technical Artist, Indie Studio 1
 
-<MediaGrid cols={2} colsMobile={1} wide>
-  <Figure
-    src={`${M}/creative-practice-01.jpg`}
-    alt="A game creator iterating on a design, adjusting an output and trying it again."
-    caption="1. Iterative Practice — allow users to iteratively tweak model outputs."
-  />
-  <Figure
-    src={`${M}/creative-practice-02.jpeg`}
-    alt="A game creator exploring several different directions from one starting idea."
-    caption="2. Divergent Thinking — provide diverse outputs while maintaining consistency with the underlying game mechanics."
-  />
-</MediaGrid>
-
 ### Phase 4 — Translation and bridging disciplinary gaps
 
 Turning creator insight into machine learning requirements, and model behaviour back into language
@@ -216,24 +208,6 @@ A finding like "players shouldn't be able to walk through a wall" is not actiona
 researcher. It becomes actionable only when it's restated as a property that can be measured, such
 as the generated worlds should maintain consistent physics. Additionally, measurement is what
 determines what the team optimises for.
-
-<MediaGrid cols={3} colsMobile={3} caption="The three capabilities the work came to hinge on — the bridge from creator insight to something a research team can measure.">
-  <Figure
-    src={`${M}/capability-consistency-icon.png`}
-    alt="Icon representing consistency: generated worlds that obey the game's rules."
-    caption="1. Consistency"
-  />
-  <Figure
-    src={`${M}/capability-diversity-icon.png`}
-    alt="Icon representing diversity: many different futures from one starting point."
-    caption="2. Diversity"
-  />
-  <Figure
-    src={`${M}/capability-persistency-icon.png`}
-    alt="Icon representing persistency: user edits that carry forward through the generated sequence."
-    caption="3. Persistency"
-  />
-</MediaGrid>
 
 ### Phase 5 — Build together to find out what you have
 
@@ -275,123 +249,12 @@ practice the system had to support. Hands-on time in the Demonstrator showed us 
 model could already deliver — and where it fell short. Read together, those translated into three
 machine learning requirements: the model's outputs needed to be consistent, diverse and persistent.
 
-| Capability | What creators needed | How we evaluated it |
-| --- | --- | --- |
-| **Consistency** | Generated gameplay respects the game's dynamics — characters don't walk through walls | Compared against ground truth using Fréchet Video Distance; holds over 2-minute sequences |
-| **Diversity** | The same starting point yields a genuine range of futures, behavioural and visual | Wasserstein distance against the diversity present in real human gameplay |
-| **Persistency** | User edits carry forward — paste in a character and the model adapts it into what follows | Prompting with modified visuals and measuring whether introduced elements survive |
-
-### Consistency — watching the model learn
-
-<MediaGrid
-  cols={4}
-  colsMobile={2}
+<YouTubeEmbed
+  id={YT.whatItProduced}
+  title="What Muse produced — consistency, diversity and persistency"
   wide
-  caption="At 10K updates the character is recognisable but the trajectory degenerates. At 100K the model sustains a longer trajectory, but a character who should fly drops to the ground. By 1M it models the flying mechanic correctly."
->
-  {[
-    { file: '01-ground-truth', h: 'Ground Truth' },
-    { file: '02-10k-updates', h: '10K Updates' },
-    { file: '03-100k-updates', h: '100K Updates' },
-    { file: '04-1m-updates', h: '1M Updates' },
-  ].map((c) => (
-    <VideoFigure
-      src={`${M}/consistency-${c.file}.mp4`}
-      caption={c.h}
-      label={`Training progression, ${c.h}: the same gameplay moment generated at this stage of training.`}
-    />
-  ))}
-</MediaGrid>
-
-### Diversity — nine futures from one starting point
-
-<Figure
-  src={`${M}/diversity-spawn-paths.png`}
-  alt="A map of the spawn area with three routes into the main level marked: left, centre and right."
-  caption="From the spawn location there are three paths into the main map — left, centre and right."
-  wide
+  caption="What the model produced against the three requirements the co-design work identified: consistency, diversity and persistency."
 />
-
-<MediaGrid
-  cols={3}
-  colsMobile={3}
-  wide
-  caption="Nine parallel sequences generated from the same prompt, showing diverse trajectories after the character takes each path (rows, top to bottom: left, centre and right)."
->
-  {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
-    <VideoFigure
-      src={`${M}/diversity-out${n}.mp4`}
-      poster={`${M}/diversity-grid-poster.png`}
-      label={`Generated trajectory ${n} of 9 from the same starting prompt.`}
-    />
-  ))}
-</MediaGrid>
-
-### Persistency — edits that stick
-
-<MediaGrid
-  cols={3}
-  colsMobile={1}
-  wide
-  caption="A power cell was added to the prompting frame where it wouldn't normally spawn. The model retains it — and generates an interaction between the character and the power cell."
->
-  <Figure
-    src={`${M}/persistency-powercell-prompt.jpg`}
-    alt="The original prompting frame, before any edit — a normal moment of gameplay."
-    caption="Prompting frame"
-  />
-  <Figure
-    src={`${M}/persistency-powercell-added.png`}
-    alt="The same frame after a power cell has been painted into a spot where one wouldn't normally appear."
-    caption="Power cell added"
-  />
-  <VideoFigure
-    src={`${M}/persistency-powercell-generated.mp4`}
-    label="Generated sequence: the added power cell persists and the character interacts with it."
-    caption="Generated sequence"
-  />
-</MediaGrid>
-
-<MediaGrid
-  cols={3}
-  colsMobile={1}
-  wide
-  caption="A new character added to the prompting frame, conditioned with zero controller inputs. The added character persists and interacts with the player character and the environment."
->
-  <Figure
-    src={`${M}/persistency-character-prompt-a.png`}
-    alt="The original prompting frame showing the player character in the level."
-    caption="Prompting frame"
-  />
-  <Figure
-    src={`${M}/persistency-character-added.png`}
-    alt="The same frame after a second character has been painted in."
-    caption="Character added"
-  />
-  <VideoFigure
-    src={`${M}/persistency-character-generated-a.mp4`}
-    label="Generated sequence: the added character persists and interacts with the player and the environment."
-    caption="Generated sequence"
-  />
-</MediaGrid>
-
-<MediaGrid cols={2} colsMobile={1} wide caption="A second persistency example from a different prompting frame.">
-  <Figure
-    src={`${M}/persistency-character-prompt-b.png`}
-    alt="An alternative prompting frame with an added character."
-    caption="Prompting frame"
-  />
-  <VideoFigure
-    src={`${M}/persistency-character-generated-b.mp4`}
-    label="Generated sequence from the alternative prompt: the added character persists and interacts."
-    caption="Generated sequence"
-  />
-</MediaGrid>
-
-This is the outcome I'd point to. Not that we ran a study, but that **user research shaped the
-evaluation metrics** — making sure we were optimising for the things that actually mattered
-downstream. Developing human-centered evaluation metrics takes iterative translation between the
-research team and the user.
 
 ---
 
@@ -404,29 +267,14 @@ displacement that AI could bring to the game development space, while highlighti
 unlocked by AI game generation that could enable new forms of storytelling.
 
 I also produced audiovisual assets to help communicate the capabilities in a straightforward way,
-helping the public understand the research.
+helping the public understand the research. The published paper drew **136K+ views**, with **55
+outlets** reporting on it, including Bloomberg and Reuters.
 
-<MediaGrid cols={3} colsMobile={2} wide caption="The assets that carried the story — the same material doing communication work rather than evidence work.">
-  <VideoFigure src={`${M}/muse-gameplay-01.mp4`} label="A generated gameplay sequence, reused to communicate the capability." />
-  <VideoFigure src={`${M}/consistency-04-1m-updates.mp4`} label="The fully-trained model generating a consistent gameplay trajectory." />
-  <VideoFigure src={`${M}/diversity-out1.mp4`} label="One of the diverse futures generated from a single prompt." />
-</MediaGrid>
-
-**118K+ views · 55 outlets including Bloomberg and Reuters**
-
-{/*
-  TODO — asset needs creating (not in the source deck): a press logo strip
-  (Nature, Bloomberg, Reuters) with the reach figures as large stat callouts.
-*/}
-
-### Afterwards
-
-<VideoFigure
-  src={`${M}/quake2-copilot-labs.mp4`}
-  poster={`${M}/quake2-copilot-labs-poster.png`}
-  controls
+<Figure
+  src={`${M}/press-coverage-collage.png`}
+  alt="A collage of overlapping press clippings covering the Muse announcement: Eurogamer, Ars Technica ('Microsoft shows progress toward real-time AI-generated game worlds'), Bloomberg UK ('Microsoft Debuts Generative AI That…'), ABC Tecnología ('Microsoft presenta Muse, la primera IA capaz de desarrollar videojuegos'), and Sina Tech."
+  caption="Selected coverage of the Muse announcement across games, technology and international press."
   wide
-  caption="AI-generated Quake II on Copilot Labs — the capability made publicly playable."
 />
 
 ---

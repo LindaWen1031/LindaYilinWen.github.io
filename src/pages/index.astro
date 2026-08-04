@@ -13,18 +13,25 @@ const featured = await getFeaturedProjects();
   <section class="hero">
     <GradientField />
     <div class="wrap-wide hero__inner">
-      <p class="eyebrow hero__eyebrow">{site.role} · {site.org}</p>
       <h1 class="hero__statement">{site.heroStatement}</h1>
-      <p class="hero__subline">{site.heroSubline}</p>
       <a class="hero__cue" href="#work">Selected work</a>
+    </div>
+  </section>
+
+  <section class="section intro">
+    <div class="wrap">
+      <div data-reveal>
+        <p class="eyebrow">About</p>
+        <p class="intro__text">{site.heroSubline}</p>
+        <p class="teaser__link"><a href={url('/about')}>More about me →</a></p>
+      </div>
     </div>
   </section>
 
   <section id="work" class="section work">
     <div class="wrap-wide">
       <header class="work__head" data-reveal>
-        <p class="eyebrow">Selected work</p>
-        <h2>Selected projects that say the most about how I work.</h2>
+        <h2>Selected work</h2>
       </header>
 
       {
@@ -41,20 +48,6 @@ const featured = await getFeaturedProjects();
           </p>
         )
       }
-
-      <p class="work__more" data-reveal>
-        <a href={url('/work')}>See all work →</a>
-      </p>
-    </div>
-  </section>
-
-  <section class="section teaser">
-    <div class="wrap">
-      <div data-reveal>
-        <p class="eyebrow">About</p>
-        <p class="teaser__text">{site.about[0]}</p>
-        <p class="teaser__link"><a href={url('/about')}>More about me →</a></p>
-      </div>
     </div>
   </section>
 </BaseLayout>
@@ -63,7 +56,7 @@ const featured = await getFeaturedProjects();
   .hero {
     position: relative;
     isolation: isolate;
-    min-height: 100dvh;
+    min-height: min(90svh, 52rem);
     /* Pull up under the sticky nav so the colour runs to the top of the page. */
     margin-block-start: calc(-1 * var(--nav-height));
     display: flex;
@@ -87,24 +80,11 @@ const featured = await getFeaturedProjects();
     max-width: var(--width-wide);
   }
 
-  .hero__eyebrow {
-    color: var(--hero-ink-soft);
-  }
-
   .hero__statement {
-    max-width: 18ch;
+    max-width: 20ch;
     font-size: var(--step-4);
     color: var(--hero-ink);
     text-shadow: 0 1px 30px rgba(70, 32, 20, 0.28);
-  }
-
-  .hero__subline {
-    max-width: 54ch;
-    color: var(--hero-ink-soft);
-    font-size: var(--step-1);
-    line-height: 1.55;
-    margin-block-start: var(--s-2);
-    text-shadow: 0 1px 22px rgba(70, 32, 20, 0.32);
   }
 
   .hero__cue {
@@ -153,15 +133,16 @@ const featured = await getFeaturedProjects();
     color: var(--accent);
   }
 
-  .teaser {
+  .intro {
     background: var(--paper-sunk);
     border-top: 1px solid var(--rule);
   }
 
-  .teaser__text {
+  .intro__text {
+    max-width: 62ch;
     font-family: var(--font-display);
-    font-size: var(--step-2);
-    line-height: 1.35;
+    font-size: var(--step-1);
+    line-height: 1.5;
     letter-spacing: var(--tracking-tight);
     margin-block-start: var(--s-3);
     font-variation-settings: 'SOFT' 40, 'WONK' 1;

@@ -46,6 +46,13 @@ const projects = defineCollection({
       .min(1),
 
     /**
+     * Optional free-text override for the "Focus" line in the page header.
+     * When set, it is shown verbatim instead of the theme labels. Use this
+     * when you want a longer, more specific phrasing than the theme tags.
+     */
+    focus: z.string().optional(),
+
+    /**
      * Cover image. Put the file in `public/media/<slug>/` and reference it as
      * `/media/<slug>/cover.jpg` — the leading slash is handled for you.
      * Aim for ~1600px wide, JPG or WebP.

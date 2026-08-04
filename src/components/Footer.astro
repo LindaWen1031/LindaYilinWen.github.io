@@ -6,21 +6,6 @@ const year = new Date().getFullYear();
 
 <footer class="foot">
   <div class="wrap-wide foot__inner">
-    <div class="foot__lead">
-      <p class="eyebrow">Get in touch</p>
-      <p class="foot__pitch">
-        I am always glad to talk about AI products, research practice, or
-        working together.
-      </p>
-      {
-        site.email && (
-          <a class="foot__email" href={`mailto:${site.email}`}>
-            {site.email}
-          </a>
-        )
-      }
-    </div>
-
     {
       site.links.length > 0 && (
         <nav class="foot__links" aria-label="Elsewhere">
@@ -41,7 +26,6 @@ const year = new Date().getFullYear();
 
   <div class="wrap-wide foot__base">
     <p>© {year} {site.name}</p>
-    {site.disclaimer && <p>{site.disclaimer}</p>}
   </div>
 </footer>
 

@@ -1,0 +1,73 @@
+---
+/**
+ * A compact "paper & press" callout for the top of a case study: an eyebrow
+ * label plus a row of outbound links (the published paper, an announcement,
+ * news coverage). Drive it from a constant at the top of the .mdx so adding a
+ * link is a one-line edit:
+ *
+ *   export const PRESS = [
+ *     { label: 'Read the paper — Nature (2025)', url: 'https://…' },
+ *   ];
+ *
+ *   <PressLinks eyebrow="Paper & press" links={PRESS} />
+ */
+interface Link {
+  label: string;
+  url: string;
+}
+
+interface Props {
+  links: Link[];
+  /** Small uppercase label above the links. */
+  eyebrow?: string;
+}
+
+const { links, eyebrow } = Astro.props;
+---
+
+{
+  links && links.length > 0 && (
+    <aside class="press">
+      {eyebrow && <p class="press__eyebrow">{eyebrow}</p>}
+      <ul class="press__list">
+        {links.map((l) => (
+          <li>
+            <a href={l.url} target="_blank" rel="noopener">
+              {l.label} ↗
+            </a>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  )
+}
+
+<style>
+  .press {
+    margin-block: var(--s-5);
+    padding-block: var(--s-4);
+    border-block: 1px solid var(--rule);
+  }
+
+  .press__eyebrow {
+    margin: 0 0 var(--s-2);
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .press__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2) var(--s-4);
+  }
+
+  .press__list a {
+    color: var(--accent);
+    font-weight: 600;
+  }
+</style>
