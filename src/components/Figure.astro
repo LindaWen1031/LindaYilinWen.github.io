@@ -23,12 +23,14 @@ interface Props {
   caption?: string;
   /** Break out past the prose column. */
   wide?: boolean;
+  /** Center and cap the image well inside the prose column. */
+  narrow?: boolean;
 }
 
-const { src, alt, caption, wide = false } = Astro.props;
+const { src, alt, caption, wide = false, narrow = false } = Astro.props;
 ---
 
-<figure class:list={['figure', wide && 'figure--wide']}>
+<figure class:list={['figure', wide && 'figure--wide', narrow && 'figure--narrow']}>
   <img src={url(src)} alt={alt} loading="lazy" decoding="async" />
   {caption && <figcaption>{caption}</figcaption>}
 </figure>
@@ -49,6 +51,11 @@ const { src, alt, caption, wide = false } = Astro.props;
     font-size: var(--step--1);
     color: var(--ink-faint);
     max-width: 60ch;
+  }
+
+  .figure--narrow {
+    max-width: min(100%, 24rem);
+    margin-inline: auto;
   }
 
   @media (min-width: 64rem) {

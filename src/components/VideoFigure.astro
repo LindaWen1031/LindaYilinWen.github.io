@@ -28,6 +28,8 @@ interface Props {
   controls?: boolean;
   /** Break out past the prose column. */
   wide?: boolean;
+  /** Center and cap the video well inside the prose column. */
+  narrow?: boolean;
 }
 
 const {
@@ -37,13 +39,14 @@ const {
   label,
   controls = false,
   wide = false,
+  narrow = false,
 } = Astro.props;
 
 const loop = !controls;
 const name = label ?? caption;
 ---
 
-<figure class:list={['video-fig', wide && 'video-fig--wide']}>
+<figure class:list={['video-fig', wide && 'video-fig--wide', narrow && 'video-fig--narrow']}>
   <video
     src={url(src)}
     poster={poster ? url(poster) : undefined}
@@ -95,6 +98,11 @@ const name = label ?? caption;
     font-size: var(--step--1);
     color: var(--ink-faint);
     max-width: 60ch;
+  }
+
+  .video-fig--narrow {
+    max-width: min(100%, 24rem);
+    margin-inline: auto;
   }
 
   @media (min-width: 64rem) {
