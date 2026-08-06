@@ -89,4 +89,45 @@
   .prose a {
     color: var(--accent);
   }
+
+  /* Tables: visible rules, generous padding, and a slightly smaller type size
+     so a data table reads as a table rather than a wall of text.
+     NOTE: this <style> block is already `is:global`, so selectors must NOT be
+     wrapped in :global() — doing so emits a literal ":global(" into the CSS and
+     the browser drops the rule. */
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--ink-faint);
+    margin-block: var(--s-5);
+    font-size: var(--step--1);
+    line-height: 1.5;
+  }
+
+  .prose th,
+  .prose td {
+    padding: var(--s-2) var(--s-3);
+    border: 1px solid color-mix(in srgb, var(--ink-faint) 55%, var(--paper));
+    text-align: left;
+    vertical-align: top;
+    color: var(--ink-soft);
+  }
+
+  .prose thead th {
+    background: var(--paper-sunk);
+    border-bottom: 2px solid var(--ink-faint);
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .prose tbody tr:nth-child(even) {
+    background: var(--paper-raised);
+  }
+
+  @media (max-width: 34rem) {
+    .prose table {
+      display: block;
+      overflow-x: auto;
+    }
+  }
 </style>

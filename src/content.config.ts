@@ -41,6 +41,7 @@ const projects = defineCollection({
           'human-centered',
           'design-research',
           'responsible-ai',
+          'ai-accessibility',
         ]),
       )
       .min(1),

@@ -111,4 +111,5 @@ export const themeLabels: Record<string, string> = {
   'human-centered': 'Human-centered AI',
   'design-research': 'Design research',
   'responsible-ai': 'Responsible AI',
+  'ai-accessibility': 'AI for accessibility',
 };

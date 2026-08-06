@@ -4,32 +4,23 @@ role: Human-AI interaction design · Design research · First-author publication
 org: Microsoft Research
 timeframe: 2022 – 2024
 summary: >-
-  Shipping a personalized object-finder in Seeing AI for blind and low-vision
-  users — where the least accurate model, inside the right system, was the one to ship.
-themes:
-  - human-centered
-  - design-research
-  - responsible-ai
+  Building an AI system powered by computer vision that helps blind or low-vision users find personal objects.
+themes: [human-centered, design-research, responsible-ai, ai-accessibility]
 cover: /media/02-find-my-things/demo-poster-01.png
 coverAlt: >-
   A blind user holding up a phone running Find My Things, panning it across a
   room to locate a personal object.
 featured: true
 order: 2
-metrics:
-  - label: In-study success rate
-    value: 83%
-  - label: Shipped in Seeing AI
-    value: 115K+ MAU
-  - label: Published
-    value: CHI EA 2024 (first author)
-  - label: Fast Company Innovation by Design
-    value: 2024 Finalist
-links:
-  - label: Read the paper (CHI EA 2024)
-    url: https://doi.org/10.1145/3613905.3648641
-  - label: Seeing AI
-    url: https://www.microsoft.com/en-us/ai/seeing-ai
+metrics: [
+  { label: 'Shipped in Seeing AI', value: '115K+ monthly active users' },
+  { label: 'Fast Company Innovation by Design 2024', value: 'Finalist for Inclusive Design and AI' },
+  { label: 'Published at top HCI venues', value: '2 papers' }
+]
+links: [
+  { label: 'Read the paper (CHI EA 2024)', url: 'https://doi.org/10.1145/3613905.3648641' },
+  { label: 'Seeing AI', url: 'https://www.microsoft.com/en-us/ai/seeing-ai' }
+]
 draft: false
 ---
 
@@ -37,44 +28,76 @@ import Figure from '../../components/Figure.astro';
 import VideoFigure from '../../components/VideoFigure.astro';
 import YouTubeEmbed from '../../components/YouTubeEmbed.astro';
 import MediaGrid from '../../components/MediaGrid.astro';
+import PressLinks from '../../components/PressLinks.astro';
 
 {/*
-  YOUTUBE PLACEHOLDERS — paste each 11-character video id between the quotes and
-  the embed goes live. Nothing else to change. All three sources need captions and
-  an audio-described track before publishing (this is an accessibility feature).
-    demo       ← assets-find-my-things/video-source/01-find-my-things-demo.mp4        (581 MB)
-    seeingAi   ← assets-find-my-things/video-source/02-find-my-things-in-seeing-ai.mp4 (314 MB)
-    onboarding ← assets-find-my-things/video-source/03-metaphor-onboarding-tutorial.mp4 (140 MB)
+  YOUTUBE PLACEHOLDER — paste the 11-character video id between the quotes and
+  the embed goes live. Nothing else to change.
+    demo ← assets-find-my-things/video-source/01-find-my-things-demo.mp4 (581 MB)
 */}
 export const YT = {
-  demo: '',
-  seeingAi: '',
-  onboarding: '',
+  demo: 'QX0MCFUHVqg',
 };
+
+{/* Papers and press. Adding a link is a one-line edit. */}
+export const PRESS = [
+  {
+    label:
+      'Understanding Personalized Accessibility through Teachable AI — ACM SIGACCESS (ASSETS 2023)',
+    url: 'https://doi.org/10.1145/3597638.3608395',
+  },
+  {
+    label: 'Find My Things: Personalized Accessibility through Teachable AI — CHI EA 2024',
+    url: 'https://doi.org/10.1145/3613905.3648641',
+  },
+  {
+    label: 'Find My Things — Microsoft Research story',
+    url: 'https://www.microsoft.com/en-us/research/story/find-my-things/',
+  },
+];
 
 export const M = '/media/02-find-my-things';
 
-{/*
-  TODO (for Linda): you are first author on CHI 2024 and the text says "we"
-  throughout. If you want to mark the decisions that were specifically yours —
-  the audio redesign and the metaphor system are the obvious candidates — this
-  is the place to do it.
-*/}
+<PressLinks eyebrow="Papers & press" links={PRESS} />
 
-## The problem
+## What is Find My Things?
 
-**In the age of large foundation models, why bother with personalization?**
+Find My Things is a feature in Microsoft's accessibility app, Seeing AI, that helps people who are
+blind or low vision locate their personal objects.
 
-Generic vision-language models are trained on images pulled from the internet, and they do not
-perform as well on photos taken by blind and low vision users. Under- and over-exposure, atypical
-framing, objects half out of shot: the data does not match what the model expects. GPT-4V will
-confidently misread a thermometer that a blind user has photographed perfectly reasonably.
+<YouTubeEmbed
+  id={YT.demo}
+  title="Find My Things — full demo"
+  poster={`${M}/demo-poster-01.png`}
+  wide
+  caption="Find My Things in use: a blind user records a few short videos of a personal object, trains a model on-device, then follows audio, haptic and visual cues back to it."
+/>
+
+I joined the project as the interaction designer and design researcher, and I am first author on the
+CHI paper that came out of it. Two questions ran through the work: how to build and evaluate an AI
+system rather than the model alone, and how to co-design with users to construct a human-AI feedback
+loop that improves system performance.
+
+---
+
+## Why build a human-AI feedback loop rather than relying on large foundation models?
+
+Rapid advances in image recognition around 2022 made it look like a solved problem. Ask a large
+foundation model what is in a photo and it will usually tell you. On that view, building a whole
+custom app to help someone find their own keys seemed redundant.
+
+Nevertheless, the team noticed two problems with these foundation models.
+
+**The first problem is that foundation models performed poorly on data from blind or low-vision
+users.** Generic vision-language models are trained on images pulled from the internet. Under- and
+over-exposure, atypical framing, objects half out of shot: the data does not match what the model
+expects. GPT-4V would misread a thermometer that a blind user had photographed.
 
 <MediaGrid
   cols={2}
   colsMobile={2}
   wide
-  caption="Generic VLMs underperform on images taken by blind and low vision users. Left column: photos taken by blind users, which the model reads incorrectly. Right column: typical internet images of the same kinds of object, which it reads correctly. Credit: Massiceti et al., CVPR 2024."
+  caption="Credit: Massiceti et al., CVPR 2024."
 >
   <Figure
     src={`${M}/vlm-fail-01.jpeg`}
@@ -98,70 +121,35 @@ confidently misread a thermometer that a blind user has photographed perfectly r
   />
 </MediaGrid>
 
-There is a second gap that scale does not close. Even a flawless generic recogniser identifies *a*
-set of keys — the category. It cannot identify *your* keys, your pill bottle, your folding guide
-cane. And if you are blind, the category is rarely what you need. You already know what keys are.
-You need to know where yours went.
+**The second problem is that an object recogniser can recognise a category, but not a specific
+thing.** It can recognise a key, but not *my* keys, *my* pill bottle, *my* folding guide cane. And if
+you are blind, the category is rarely what you need. You already know what keys are. You need to
+know where yours went.
 
-**Teachable AI** answers both: users provide their own examples and personalise the model themselves
-through few-shot adaptation, then teach, test, adjust and repeat until it performs as they need.
+**Human-AI feedback loops** answer both gaps: users provide their own examples and personalise the
+model themselves through few-shot adaptation, then teach, test, adjust and repeat until it performs
+as they need.
+
+More specifically, this is how the loop works in Find My Things: users record four short videos of
+their object → a personalised model trains on device in seconds → they scan the room and follow
+audio, haptic and visual cues to the object → if recognition is poor, they re-record and try again.
 
 <Figure
-  src={`${M}/teachable-ai-diagram.png`}
-  alt="A loop diagram of a teachable AI system: the user provides training examples, the system trains, the user tests it, and the cycle repeats until it performs as desired."
-  caption="In a teachable AI system, the user provides training examples and iterates until the system performs as desired."
+  src={`${M}/teaching-loop-diagram.png`}
+  alt="A circular Teaching Loop diagram with four stages connected by arrows: a personal object (a key on a table), taking four diverse videos of it with a phone, a personalized machine learning model trained on device, and using Find My Things to locate the object — which loops back to the object again."
+  caption="The human-AI feedback loop."
   wide
 />
 
-That is the paradigm. The rest of this is the interaction design problem: a teaching loop only works
-if a person can actually close it.
-
 ---
 
-## Find My Things
+## Training the model was never the hard part
 
-A feature that helps people who are blind or low vision locate their personal objects.
+The human-AI feedback loop requires teams to think about building AI in a holistic and systemic way,
+rather than optimising a single component against a benchmark. Three challenges came up in setting
+up the loop that underpins our AI system.
 
-<YouTubeEmbed
-  id={YT.demo}
-  title="Find My Things — full demo"
-  poster={`${M}/demo-poster-01.png`}
-  wide
-  caption="Find My Things in use: a blind user records a few short videos of a personal object, trains a model on-device, then follows audio, haptic and visual cues back to it. (Captions and audio description to be enabled on upload — see the teaching-loop description below for a text alternative.)"
-/>
-
-**The loop.** Record four short videos of your object → a personalised model trains on device in
-seconds → scan the room and follow audio, haptic and visual cues to the object → if recognition is
-poor, re-record and try again.
-
-<MediaGrid cols={4} colsMobile={2} wide caption="The teaching loop, looping back from step 4 to step 1.">
-  <Figure
-    src={`${M}/loop-object-keys.png`}
-    alt="Step 1: a personal object — a set of keys — that the user wants to be able to find."
-    caption="1 · Personal object"
-  />
-  <Figure
-    src={`${M}/loop-user-phone.png`}
-    alt="Step 2: the user recording four short, varied videos of the object with their phone."
-    caption="2 · Take four diverse videos"
-  />
-  <Figure
-    src={`${M}/loop-model-training.png`}
-    alt="Step 3: a personalised model training on the device in seconds from the recorded videos."
-    caption="3 · Personalized model trained on device"
-  />
-  <Figure
-    src={`${M}/loop-find-experience.png`}
-    alt="Step 4: the user scanning the room and following cues to reach the object, then looping back to re-record if needed."
-    caption="4 · Use Find My Things"
-  />
-</MediaGrid>
-
-Everything below is about what broke in that loop, and what we changed.
-
----
-
-## Challenge 1 — The best model on paper was the wrong model
+### Challenge 1 — The best model on paper was the worst model in practice
 
 We evaluated three feature extractors. On average frame accuracy, the winner was obvious:
 
@@ -172,12 +160,12 @@ We evaluated three feature extractors. On average frame accuracy, the winner was
 | ViT-B-32 (CLIP) | LAION2B (self-supervised) | 87.46M | **74.8%** |
 
 Then we put them on phones. The two larger models took significantly longer to personalise and to
-run inference. CLIP was almost unusable on older iPhones.
+run inference. ViT-B-32 (CLIP) was almost unusable on older iPhones.
 
 <Figure
-  src={`${M}/model-speed-on-device.png`}
-  alt="A chart comparing on-device speed: EfficientNetB0 personalises and runs inference far faster than EfficientNetV2 and CLIP, with CLIP the slowest by a wide margin."
-  caption="Ported to device, the larger models were far slower to personalise and to run inference."
+  src={`${M}/find-my-things-in-use.jpg`}
+  alt="Over-the-shoulder view of a woman holding a phone running Find My Things. The screen shows the live camera view of the carpet with a detection box drawn around a small Union Jack coaster, which is lying on the floor a short distance in front of her."
+  caption="Find My Things running on device. How fast the model personalises and runs inference is what sets the pace of the teaching loop."
   wide
 />
 
@@ -187,16 +175,11 @@ Speed mattered for reasons that have nothing to do with benchmarks.
 the user needs to clear the false lead and move on quickly — which makes inference speed part of the
 error experience, not a performance stat.
 
-<MediaGrid cols={2} colsMobile={1} wide caption="Helping the model fail gracefully by enabling a fast feedback loop.">
-  <Figure
-    src={`${M}/fail-gracefully-01.png`}
-    alt="A user encountering an incorrect recognition and quickly dismissing the false lead."
-  />
-  <Figure
-    src={`${M}/fail-gracefully-02.png`}
-    alt="The user re-recording and trying again moments later, because the loop is fast."
-  />
-</MediaGrid>
+<Figure
+  src={`${M}/fail-gracefully.png`}
+  alt="A Find My Things screen reading 'MacBook charger, ahead — 5 feet', showing the live camera view of a wooden floor with the charger highlighted, and a 'Finish' and 'Start over' button pair at the bottom. 'Start over' is picked out, because it is how a user clears a false lead and re-runs the search."
+  caption="Helping the model fail gracefully by enabling a fast feedback loop — 'Start over' clears a false lead and re-runs the search."
+/>
 
 **Users test immediately, in context.** People taught an object and tried it straight away, on their
 own carpet, on their own couch. When it failed they formed theories — *maybe my glasses are hard to
@@ -207,13 +190,11 @@ where personalisation actually happens, and its speed is set by how fast the mod
 traded for a model 20x smaller, because personalisation and inference speed are what let a person
 close the loop, and closing the loop is what gets them to their keys.
 
-> Going beyond aggregate metrics is not a philosophical point. It changes which model ships.
+> Think holistically about the metrics you use to evaluate the whole experience, rather than one
+> component of it (model performance).
+### Challenge 2 — Users had no mental model of how a camera works
 
----
-
-## Challenge 2 — Users had no mental model of how a camera works
-
-In the user study we watched people position the phone in ways no sighted user would: aiming at the
+In the user study I watched people position the phone in ways no sighted user would: aiming at the
 floor when they thought the object was on the floor, at a chair when they thought it was on a chair,
 holding it flat when they meant to survey the whole room.
 
@@ -235,41 +216,31 @@ holding it flat when they meant to survey the whole room.
   />
 </MediaGrid>
 
-Entirely logical, and not how cameras work. Many of our users, especially those born blind, had
-never needed a working model of a camera's field of view. Nothing in their experience makes it
-obvious that a camera sees a cone, or that surveying a room means a slow pan rather than pointing at
-a place.
+While this is entirely logical, it is not how cameras work. Many of our users, especially those born
+blind, had never used a camera. Nothing in their experience makes it obvious that a camera sees a
+cone, or that surveying a room means a slow pan rather than pointing at a place.
 
-**This is the failure mode no amount of model quality fixes.** However good recognition gets, if a
-person cannot aim the camera, they cannot find their object.
+**This is the failure mode no amount of model quality fixes.** No matter how good recognition gets,
+if a person cannot aim the camera, they cannot find their object.
 
-**The fix was onboarding we had assumed we would not need — and metaphor did most of the work.** The
-camera is *a pair of eyes*. The audio cues are *a metal detector*. Both import understanding people
-already have, and both carry the right implications: eyes point somewhere and have a field of view;
-a metal detector gets louder as you get closer. We built a tutorial teaching the physical technique,
-like panning the camera slowly.
+**The fix was onboarding we had assumed we would not need — and metaphor did most of the work.** We
+reinforced the idea that the camera is *a pair of eyes*. The audio cues are *a metal detector*. Both
+import understanding people already have, and both carry the right implications: eyes point
+somewhere and have a field of view; a metal detector gets louder as you get closer. We built a
+tutorial teaching the physical technique, like panning the camera slowly.
 
-<MediaGrid cols={2} colsMobile={1} wide caption="Metaphors and a tutorial experience to onboard users.">
-  <Figure
-    src={`${M}/metaphor-onboarding.png`}
-    alt="Onboarding screens introducing the metaphors: the camera as a pair of eyes and the audio cue as a metal detector."
-    caption="The metaphors: a pair of eyes, and a metal detector."
-  />
-  <YouTubeEmbed
-    id={YT.onboarding}
-    title="Find My Things — metaphor onboarding tutorial"
-    poster={`${M}/metaphor-onboarding.png`}
-    caption="The onboarding tutorial teaching the physical technique — panning the camera slowly to survey a room."
-  />
-</MediaGrid>
+<Figure
+  src={`${M}/metaphor-onboarding.png`}
+  alt="A Find My Things onboarding screen titled 'Find tutorial', with an illustration of a person pointing a phone at a key on a table, explaining that the tutorial will show you how to pan the camera around to search for your things and how to follow the audio guidance towards them, with a 'Get Started' button."
+  caption="Metaphors and a tutorial experience to onboard users: a pair of eyes, and a metal detector."
+  wide
+/>
 
----
-
-## Challenge 3 — The last mile
+### Challenge 3 — The last mile
 
 Our first audio design keyed feedback to whether the object was **in view of the camera**.
 
-Then we watched a user struggle to find his keys when they were already at his fingertips. At close
+Then I watched a user struggle to find his keys when they were already at his fingertips. At close
 range the camera had lost sight of them, so the app went quiet — exactly when he was closest. The
 system was reporting the camera's state when he needed the object's location.
 
@@ -280,12 +251,13 @@ system was reporting the camera's state when he needed the object's location.
   wide
 />
 
-**The fix was to make guidance depend on the object's 3D location rather than its presence in
-frame.** Once localised, the object's position persists, so guidance keeps working as the phone
-moves and the object drifts out of shot.
+I shared this last-mile challenge with the engineer, who devised a brilliant fix: **persist the
+object's 3D location rather than its presence in frame.** Once localised, the object's position
+persists, so guidance keeps working as the phone moves and the object drifts out of shot.
 
-The metaphor was a **rubber band**: a continuous pull toward the object that tightens as you close
-in. Tension you can feel, rather than a signal that cuts out at the moment of success.
+The metaphor was a **rubber band**: a continuous pull toward the object
+that tightens as you close in. Tension you can feel, rather than a signal that cuts out at the
+moment of success.
 
 <MediaGrid
   cols={2}
@@ -307,50 +279,28 @@ in. Tension you can feel, rather than a signal that cuts out at the moment of su
 
 ---
 
-## Results
+## Impact
 
-**83% success rate** — the app helped users find their objects in 71 of 86 uses. **12 of 15
-participants** felt more confident finding their things.
+The research on Find My Things was published at ASSETS, a leading accessibility research conference,
+and at CHI, a leading human-computer interaction conference, where I am first author. The papers
+shared what we learned about co-designing with users, and about developing the models side-by-side
+with front-end user evaluation.
 
-Most telling for the personalisation argument: participants taught **58 objects, forming 37 visually
-distinct clusters**. Some were common — keys (7), earphones (3), pill bottles (3). The long tail was
-single instances: a measuring tape, a plastic scrunchy, pliers, a pot, a purse. One user each.
-
-{/*
-  TODO — asset needs creating (none in the source deck): a long-tail bar chart of
-  object clusters, sorted by count, with the singletons labelled. This is the
-  strongest single argument for personalisation on the page.
-*/}
-
-That distribution *is* the case for teachable AI. No generic recogniser is going to be trained on
-your plastic scrunchy.
-
-<YouTubeEmbed
-  id={YT.seeingAi}
-  title="Find My Things in Seeing AI"
-  poster={`${M}/demo-poster-02.png`}
-  wide
-  caption="The shipped feature in Seeing AI. (Captions and audio description to be enabled on upload.)"
-/>
-
-{/*
-  TODO (for Linda): the Communication section is not yet written. In the WHAM
-  case study it covers PR strategy and reach; here it would cover the Fast Company
-  recognition and how you presented the work. Flagged, not written — your call.
-*/}
+Find My Things is now a feature in **Seeing AI**, which has 115K+ monthly active users, and the work
+was a **2024 Fast Company Innovation by Design finalist** in AI and Inclusive Design. It was also
+named one of Microsoft's 50 AI milestones.
 
 ---
 
 ## What I would take to the next project
 
-1. **Aggregate metrics can select the wrong model.** Frame accuracy said CLIP. The experience said
-   EfficientNetB0 — five points worse and 20x smaller. Ask what the metric stands in for, then check
-   whether it still holds on the actual device, inside the actual loop.
-2. **A model is only as good as the system it underpins.** A world-class model inside a system that
-   does not fit the user is a world-class model nobody can use.
-3. **Check what users already believe about the technology.** We designed for people who could not
-   see the object. We had not designed for people who had never needed a mental model of a camera.
-4. **Metaphor is an interface.** *Pair of eyes* and *metal detector* did more onboarding work than
+1. **Evaluate a model in the system and experience it would be deployed in**, rather than focusing on
+   isolated aggregate metrics.
+2. **Test early and iteratively.** This is how we caught fundamentally wrong assumptions about
+   users' mental model of the app. It matters especially in accessibility research, where the point
+   is to design *with* users rather than just for them.
+3. **Metaphor is an interface.** *Pair of eyes* and *metal detector* did more onboarding work than
    any instruction we wrote, because they import understanding people already have.
-5. **Design the last mile separately.** The endgame of a guidance system has its own failure modes.
-   Ours broke precisely at the moment of success.
+4. **Don't shy away from failure cases.** The failure examples I collected from user research
+   sessions were a great catalyst for the team to discuss model evaluation and front-end design
+   choices. They align the team, and they motivate it to solve the problem.
