@@ -79,6 +79,26 @@ import { site } from '../data/site';
           </section>
         )
       }
+
+      {
+        site.talks.length > 0 && (
+          <section class="listing" data-reveal>
+            <p class="eyebrow">Invited talks &amp; lectures</p>
+            <ul>
+              {site.talks.map((t) => (
+                <li class="listing__item">
+                  <p class="listing__title">{t.venue}</p>
+                  {[t.title, t.date].filter(Boolean).length > 0 && (
+                    <p class="listing__meta">
+                      {[t.title, t.date].filter(Boolean).join(' · ')}
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
     </div>
   </section>
 </BaseLayout>
@@ -111,20 +131,24 @@ import { site } from '../data/site';
     color: var(--ink-soft);
   }
 
-  .about__body a {
+  /* The About paragraphs are injected with `set:html`, so their anchors never
+     receive Astro's scope attribute — they must be matched with :global(). */
+  .about__body :global(a) {
     color: var(--ink);
     text-decoration: underline;
     text-underline-offset: 0.2em;
     text-decoration-thickness: 1px;
   }
 
+  .about__body :global(a:hover) {
+    color: var(--accent);
+  }
+
   .about__body p:first-child {
-    font-family: var(--font-display);
+    font-family: var(--font-reading);
     font-size: var(--step-2);
-    line-height: 1.35;
-    letter-spacing: var(--tracking-tight);
+    line-height: 1.45;
     color: var(--ink);
-    font-variation-settings: 'SOFT' 40, 'WONK' 1;
   }
 
   .focus {

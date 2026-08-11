@@ -60,10 +60,13 @@
 
   /* ── Type ───────────────────────────────────────────────────────────────
      Fraunces: a soft, warm serif for display. Figtree: a rounded humanist
-     sans for everything else. Both self-hosted via @fontsource.            */
+     sans for everything else. Newsreader: a text-first serif reserved for
+     long-form passages set large, where Fraunces' WONK axis gets tiring.
+     All self-hosted via @fontsource.                                       */
   --font-display: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
   --font-body: 'Figtree Variable', ui-sans-serif, system-ui, -apple-system,
     'Segoe UI', sans-serif;
+  --font-reading: 'Newsreader Variable', 'Iowan Old Style', Georgia, serif;
 
   /* Big jumps between steps: hero statements are genuinely large, body text
      stays calm. Sizes are fluid between 380px and 1280px viewports.        */

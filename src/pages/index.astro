@@ -22,7 +22,7 @@ const featured = await getFeaturedProjects();
     <div class="wrap">
       <div data-reveal>
         <p class="eyebrow">About</p>
-        <p class="intro__text">{site.heroSubline}</p>
+        <p class="intro__text" set:html={site.heroSubline} />
         <p class="teaser__link"><a href={url('/about')}>More about me →</a></p>
       </div>
     </div>
@@ -140,12 +140,21 @@ const featured = await getFeaturedProjects();
 
   .intro__text {
     max-width: 62ch;
-    font-family: var(--font-display);
+    font-family: var(--font-reading);
     font-size: var(--step-1);
-    line-height: 1.5;
-    letter-spacing: var(--tracking-tight);
+    line-height: 1.62;
     margin-block-start: var(--s-3);
-    font-variation-settings: 'SOFT' 40, 'WONK' 1;
+  }
+
+  .intro__text :global(a) {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+
+  .intro__text :global(a:hover) {
+    color: var(--accent);
   }
 
   .teaser__link {

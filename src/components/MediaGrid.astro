@@ -67,6 +67,7 @@ const { cols, colsMobile = 1, caption, wide = false } = Astro.props;
 
   .media-grid__cells :global(figcaption) {
     margin-block-start: var(--s-1);
+    text-align: center;
     font-size: var(--step--1);
     color: var(--ink-faint);
   }
@@ -76,6 +77,8 @@ const { cols, colsMobile = 1, caption, wide = false } = Astro.props;
     font-size: var(--step--1);
     color: var(--ink-faint);
     max-width: 60ch;
+    margin-inline: auto;
+    text-align: center;
   }
 
   @media (min-width: 64rem) {

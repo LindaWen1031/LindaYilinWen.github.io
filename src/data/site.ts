@@ -12,9 +12,12 @@ export const site = {
   heroStatement:
     'I transform frontier research on multimodal generative AI into global-scale products that redefine how people create and interact.',
 
-  /** A short supporting line under the hero statement. */
+  /**
+   * A short supporting line under the hero statement.
+   * Rendered with `set:html`, so inline anchors are allowed.
+   */
   heroSubline:
-  'Hi there, welcome to my research and design portfolio. I am an AI research product manager at Microsoft Research. I lead interdisciplinary efforts in driving frontier research in world models, multimodal generative AI, and computer vision. I\'ve shipped AI-powered features for enterprise and consumer-facing products in Microsoft Copilot, Word, Seeing AI, and Xbox. My research insights have been published in leading academic venues such as Nature and CHI.',
+    'Hi there, welcome to my research and design portfolio. I am an AI research product manager at Microsoft Research. I lead interdisciplinary efforts in driving frontier research in world models, multimodal generative AI, and computer vision. I\'ve shipped AI-powered features for enterprise and consumer-facing products in <a href="https://copilot.microsoft.com/labs/experiments/copilot-gaming-experiences" target="_blank" rel="noopener">Microsoft Copilot</a>, Word, <a href="https://www.microsoft.com/en-us/research/story/find-my-things/" target="_blank" rel="noopener">Seeing AI</a>, and <a href="https://www.microsoft.com/en-us/research/project/pidm-predictive-inverse-dynamic-models/" target="_blank" rel="noopener">Xbox</a>. My research insights have been published in leading academic venues such as <a href="https://doi.org/10.1038/s41586-025-08600-3" target="_blank" rel="noopener">Nature</a> and <a href="https://doi.org/10.1145/3613905.3648641" target="_blank" rel="noopener">CHI</a>.',
 
   /** Used for <meta description>, search results, and link previews. */
   description:
@@ -23,8 +26,8 @@ export const site = {
   /** Shown on the About page. Each string becomes a paragraph. */
   about: [
     'Navigating a career across international relations, design and now AI research, I\'ve always been motivated by an urge to serve the most underrepresented people — creating scalable, innovative tools for empowerment, and bringing about meaningful systemic change.',
-    'I\'ve brought this ethos to my work at Microsoft. I created computer-vision technologies to increase accessibility for people who are blind or low vision — work selected for a Fast Company Innovation by Design Award. I\'ve also worked on the representation of people with disabilities, architecting the data governance structure for AI image generation. You can read more about our work <a href="https://www.microsoft.com/en-us/research/story/find-my-things/" target="_blank" rel="noopener">here</a>.',
-    'Now I\'m focused on creating tools for storytellers: bringing forth new stories, and letting more people read and experience interactive worlds they relate to — unlocking new forms of storytelling. I work on an interdisciplinary AI research team advancing multimodal AI, powered by world models.',
+    'I\'ve brought this ethos to my work at Microsoft. I created computer-vision technologies to increase accessibility for people who are blind or low vision — work selected for a <a href="https://www.fastcompany.com/91128700/accessible-design-innovation-by-design-2024" target="_blank" rel="noopener">Fast Company Innovation by Design Award</a>. I\'ve also worked on the representation of people with disabilities, architecting the data governance structure for AI image generation. You can read more about our work <a href="https://www.microsoft.com/en-us/research/story/find-my-things/" target="_blank" rel="noopener">here</a>.',
+    'Now I\'m focused on creating tools for storytellers: bringing forth new stories, and letting more people read and experience interactive worlds they relate to — unlocking new forms of storytelling. I work on an interdisciplinary AI research team advancing multimodal AI, powered by <a href="https://doi.org/10.1038/s41586-025-08600-3" target="_blank" rel="noopener">world models</a>.',
     'Outside work, you\'ll find me on the salsa and bachata dance floor, or cooking up a new recipe inspired by my favourite cuisines — Sichuanese and Italian. My footprints span 51 countries, and I\'ve lived and worked in China, the US, the UK, Mauritius and Spain. I speak Mandarin, English, Spanish and French fluently.',
   ],
 
@@ -40,7 +43,6 @@ export const site = {
    * Each entry: title, authors, venue, year, and an optional url.
    * - Leave `url: ''` and the title renders as plain text (no dead link).
    * - Leave the whole array `[]` and the Publications section is hidden.
-   * TODO (Linda): replace these placeholders with your real citations + links.
    */
   publications: [
     {
@@ -75,21 +77,58 @@ export const site = {
    * Each entry: outlet, title, date, and an optional url.
    * - Leave `url: ''` and the title renders as plain text (no dead link).
    * - Leave the whole array `[]` and the News/Press section is hidden.
-   * TODO (Linda): replace these placeholders with your real press items + links.
    */
   press: [
     {
-      outlet: 'TODO — outlet (e.g. Fast Company)',
-      title: 'TODO — headline (e.g. Innovation by Design Award)',
-      date: '', // TODO: e.g. '2023'
-      url: '', // TODO: paste the article URL
+      outlet: 'Bloomberg',
+      title:
+        'Microsoft Unveils Generative AI That Can Create Video Game Scenes',
+      date: '2025',
+      url: 'https://www.bloomberg.com/news/articles/2025-02-19/microsoft-unveils-generative-ai-that-can-create-video-game-scenes',
     },
     {
-      outlet: 'TODO — outlet (e.g. Microsoft Research)',
-      title: 'TODO — headline (e.g. the Find My Things story)',
-      date: '',
-      url: '',
+      outlet: 'Reuters',
+      title: 'Microsoft develops AI model for videogames',
+      date: '2025',
+      url: 'https://www.reuters.com/technology/artificial-intelligence/microsoft-develops-ai-model-videogames-2025-02-19/',
     },
+    {
+      outlet: 'Microsoft Source',
+      title: "15 milestones that shaped Microsoft's vision for AI",
+      date: '2025',
+      url: 'https://news.microsoft.com/source/features/ai/15-milestones-that-shaped-microsofts-vision-for-ai/',
+    },
+    {
+      outlet: 'Fast Company',
+      title: 'Innovation by Design 2024 — accessible design',
+      date: '2024',
+      url: 'https://www.fastcompany.com/91128700/accessible-design-innovation-by-design-2024',
+    },
+    {
+      outlet: 'Fast Company',
+      title: 'Innovation by Design 2024 — artificial intelligence',
+      date: '2024',
+      url: 'https://www.fastcompany.com/91129207/artificial-intelligence-innovation-by-design-2024',
+    },
+    {
+      outlet: 'Microsoft Research',
+      title: 'Find My Things: teachable AI for people who are blind or low vision',
+      date: '2023',
+      url: 'https://www.microsoft.com/en-us/research/story/find-my-things/',
+    },
+  ],
+
+  /**
+   * Invited talks and lectures shown on the About page.
+   * Each entry: venue, title, date. `title` and `date` are optional — leave
+   * them as '' and only the venue shows. Leave the array `[]` to hide the
+   * section entirely.
+   */
+  talks: [
+    { venue: 'Imperial College London', title: '', date: '' },
+    { venue: 'London Design Festival', title: '', date: '' },
+    { venue: 'University of Cambridge', title: '', date: '' },
+    { venue: 'University of Birmingham', title: '', date: '' },
   ],
 
   /** Footer contact. Leave as '' to hide it; add a real address to show it. */

@@ -77,6 +77,12 @@ const { prev, next } = await getNeighbours(project.id);
     }
 
     <div class="wrap body">
+      {data.notice && (
+        <aside class="notice" role="note">
+          <p>{data.notice}</p>
+        </aside>
+      )}
+
       <Prose>
         <Content />
       </Prose>
@@ -201,6 +207,24 @@ const { prev, next } = await getNeighbours(project.id);
 
   .body {
     padding-block: var(--s-5) var(--s-7);
+  }
+
+  /* Standing note about the project itself — e.g. an older piece of work, or a
+     product that has since been retired. Sits above the body, quieter than the
+     prose so it reads as context rather than as the opening argument. */
+  .notice {
+    max-width: var(--measure);
+    margin-block-end: var(--s-5);
+    padding: var(--s-3);
+    border-inline-start: 2px solid var(--accent-soft);
+    background: var(--paper-sunk);
+    border-radius: var(--radius);
+  }
+
+  .notice p {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    line-height: 1.6;
   }
 
   .links {

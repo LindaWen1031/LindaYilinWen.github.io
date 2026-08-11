@@ -69,6 +69,13 @@ const projects = defineCollection({
     /** Lower numbers sort first, everywhere. */
     order: z.number().default(99),
 
+    /**
+     * Optional short notice shown in a callout above the page body — for
+     * example, flagging that a project is old or that the product has since
+     * been retired. Plain text; leave unset and nothing renders.
+     */
+    notice: z.string().optional(),
+
     /** Optional public-safe outcome chips shown near the top of the page. */
     metrics: z
       .array(
