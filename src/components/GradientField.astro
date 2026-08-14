@@ -40,6 +40,10 @@
     left: -16%;
     width: 132%;
     height: 132%;
+    /* The global media reset caps replaced elements at max-width: 100%, which
+       clamped this back to the field's width while `left: -16%` still shifted
+       it — leaving a flat, unpainted strip down the right-hand edge. */
+    max-width: none;
     display: block;
     filter: blur(12px) saturate(1.12);
     opacity: 0;
