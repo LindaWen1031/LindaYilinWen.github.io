@@ -6,18 +6,23 @@ export const site = {
   name: 'Linda Yilin Wen',
   /** Shown under your name in the nav and on About. */
   role: 'AI Research Product Manager',
-  org: 'Microsoft Research',
+  /**
+   * Current affiliation, shown after your role in the nav and on About.
+   * Leave as '' when you have no current affiliation to name — both places
+   * drop the separator and show the role alone.
+   */
+  org: '',
 
   /** The big statement on the landing page. Keep it to one or two lines. */
   heroStatement:
-    'I transform frontier research on multimodal generative AI into global-scale products that redefine how people create and interact.',
+    'I transform frontier AI research into global-scale products that redefine how people create and interact.',
 
   /**
    * A short supporting line under the hero statement.
    * Rendered with `set:html`, so inline anchors are allowed.
    */
   heroSubline:
-    'Hi there, welcome to my research and design portfolio. I am an AI research product manager at Microsoft Research. I lead interdisciplinary efforts in driving frontier research in world models, multimodal generative AI, and computer vision. I\'ve shipped AI-powered features for enterprise and consumer-facing products in <a href="https://copilot.microsoft.com/labs/experiments/copilot-gaming-experiences" target="_blank" rel="noopener">Microsoft Copilot</a>, Word, <a href="https://www.microsoft.com/en-us/research/story/find-my-things/" target="_blank" rel="noopener">Seeing AI</a>, and <a href="https://www.microsoft.com/en-us/research/project/pidm-predictive-inverse-dynamic-models/" target="_blank" rel="noopener">Xbox</a>. My research insights have been published in leading academic venues such as <a href="https://doi.org/10.1038/s41586-025-08600-3" target="_blank" rel="noopener">Nature</a> and <a href="https://doi.org/10.1145/3613905.3648641" target="_blank" rel="noopener">CHI</a>.',
+    'Hi there, welcome to my research and design portfolio. I am an AI research product manager, most recently with four years of experience at Microsoft Research. I\'ve led interdisciplinary efforts in driving frontier research in world models, multimodal generative AI, and computer vision. I\'ve shipped AI-powered features for enterprise and consumer-facing products in <a href="https://copilot.microsoft.com/labs/experiments/copilot-gaming-experiences" target="_blank" rel="noopener">Microsoft Copilot</a>, Word, <a href="https://www.microsoft.com/en-us/research/story/find-my-things/" target="_blank" rel="noopener">Seeing AI</a>, and <a href="https://www.microsoft.com/en-us/research/project/pidm-predictive-inverse-dynamic-models/" target="_blank" rel="noopener">Xbox</a>. My research insights have been published in leading academic venues such as <a href="https://doi.org/10.1038/s41586-025-08600-3" target="_blank" rel="noopener">Nature</a> and <a href="https://doi.org/10.1145/3613905.3648641" target="_blank" rel="noopener">CHI</a>.',
 
   /** Used for <meta description>, search results, and link previews. */
   description:
@@ -26,14 +31,14 @@ export const site = {
   /** Shown on the About page. Each string becomes a paragraph. */
   about: [
     'Navigating a career across international relations, design and now AI research, I\'ve always been motivated by an urge to serve the most underrepresented people — creating scalable, innovative tools for empowerment, and bringing about meaningful systemic change.',
-    'I\'ve brought this ethos to my work at Microsoft. I created computer-vision technologies to increase accessibility for people who are blind or low vision — work selected for a <a href="https://www.fastcompany.com/91128700/accessible-design-innovation-by-design-2024" target="_blank" rel="noopener">Fast Company Innovation by Design Award</a>. I\'ve also worked on the representation of people with disabilities, architecting the data governance structure for AI image generation. You can read more about our work <a href="https://www.microsoft.com/en-us/research/story/find-my-things/" target="_blank" rel="noopener">here</a>.',
-    'Now I\'m focused on creating tools for storytellers: bringing forth new stories, and letting more people read and experience interactive worlds they relate to — unlocking new forms of storytelling. I work on an interdisciplinary AI research team advancing multimodal AI, powered by <a href="https://doi.org/10.1038/s41586-025-08600-3" target="_blank" rel="noopener">world models</a>.',
+    'I brought this ethos to the four years I spent at Microsoft Research. I created computer-vision technologies to increase accessibility for people who are blind or low vision — work selected for a <a href="https://www.fastcompany.com/91128700/accessible-design-innovation-by-design-2024" target="_blank" rel="noopener">Fast Company Innovation by Design Award</a>. I\'ve also worked on the representation of people with disabilities, architecting the data governance structure for AI image generation. You can read more about our work <a href="https://www.microsoft.com/en-us/research/story/find-my-things/" target="_blank" rel="noopener">here</a>.',
+    'Now I\'m focused on creating tools for storytellers: bringing forth new stories, and letting more people read and experience interactive worlds they relate to — unlocking new forms of storytelling. I\'ve worked on an interdisciplinary AI research team advancing multimodal AI, powered by <a href="https://doi.org/10.1038/s41586-025-08600-3" target="_blank" rel="noopener">world models</a>.',
     'Outside work, you\'ll find me on the salsa and bachata dance floor, or cooking up a new recipe inspired by my favourite cuisines — Sichuanese and Italian. My footprints span 51 countries, and I\'ve lived and worked in China, the US, the UK, Mauritius and Spain. I speak Mandarin, English, Spanish and French fluently.',
   ],
 
   /** Short bullets shown on About. Keep them punchy. */
   focus: [
-    'Productizing cutting-edge AI models',
+    'Productizing multimodal world models',
     'Leading multidisciplinary AI research teams',
     'Human-centered AI practice and responsible deployment',
   ],

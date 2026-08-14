@@ -14,7 +14,7 @@ const items = [
   <div class="nav__inner wrap-wide">
     <a class="nav__brand" href={url('/')}>
       <span class="nav__name">{site.name}</span>
-      <span class="nav__role">{site.role}, {site.org}</span>
+      <span class="nav__role">{[site.role, site.org].filter(Boolean).join(', ')}</span>
     </a>
 
     <nav aria-label="Primary">
