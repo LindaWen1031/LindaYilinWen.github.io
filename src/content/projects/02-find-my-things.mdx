@@ -96,7 +96,6 @@ expects. GPT-4V would misread a thermometer that a blind user had photographed.
 <MediaGrid
   cols={2}
   colsMobile={2}
-  wide
   caption="Figure 2. Credit: Massiceti et al., CVPR 2024."
 >
   <Figure
@@ -177,6 +176,7 @@ error experience, not a performance stat.
   src={`${M}/fail-gracefully.png`}
   alt="A Find My Things screen reading 'MacBook charger, ahead — 5 feet', showing the live camera view of a wooden floor with the charger highlighted, and a 'Finish' and 'Start over' button pair at the bottom. 'Start over' is picked out, because it is how a user clears a false lead and re-runs the search."
   caption="Figure 5. Helping the model fail gracefully by enabling a fast feedback loop — 'Start over' clears a false lead and re-runs the search."
+  tall
 />
 
 **Users test immediately, in context.** People taught an object and tried it straight away, on their
@@ -196,7 +196,7 @@ In the user study I watched people position the phone in ways no sighted user wo
 floor when they thought the object was on the floor, at a chair when they thought it was on a chair,
 holding it flat when they meant to survey the whole room.
 
-<MediaGrid cols={3} colsMobile={1} wide>
+<MediaGrid cols={3} colsMobile={1}>
   <Figure
     src={`${M}/camera-mental-model-survey-room.png`}
     alt="A user holding the phone flat and level, expecting it to take in the whole room at once."
@@ -231,6 +231,7 @@ tutorial teaching the physical technique, like panning the camera slowly.
   src={`${M}/metaphor-onboarding.png`}
   alt="A Find My Things onboarding screen titled 'Find tutorial', with an illustration of a person pointing a phone at a key on a table, explaining that the tutorial will show you how to pan the camera around to search for your things and how to follow the audio guidance towards them, with a 'Get Started' button."
   caption="Figure 6. Metaphors and a tutorial experience to onboard users: a pair of eyes, and a metal detector."
+  tall
 />
 
 ### Challenge 3 — The last mile
@@ -258,7 +259,6 @@ moment of success.
 <MediaGrid
   cols={2}
   colsMobile={1}
-  wide
   caption="Figure 8. The audio redesign: from reporting whether the object is in view of the camera to a continuous pull toward its location."
 >
   <Figure

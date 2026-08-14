@@ -25,12 +25,32 @@ interface Props {
   wide?: boolean;
   /** Center and cap the image well inside the prose column. */
   narrow?: boolean;
+  /**
+   * For strongly portrait images — phone screenshots especially. Caps the
+   * image by *height* rather than width, so it can be taken in at a glance
+   * instead of running past the bottom of the window.
+   */
+  tall?: boolean;
 }
 
-const { src, alt, caption, wide = false, narrow = false } = Astro.props;
+const {
+  src,
+  alt,
+  caption,
+  wide = false,
+  narrow = false,
+  tall = false,
+} = Astro.props;
 ---
 
-<figure class:list={['figure', wide && 'figure--wide', narrow && 'figure--narrow']}>
+<figure
+  class:list={[
+    'figure',
+    wide && 'figure--wide',
+    narrow && 'figure--narrow',
+    tall && 'figure--tall',
+  ]}
+>
   <img src={url(src)} alt={alt} loading="lazy" decoding="async" />
   {caption && <figcaption>{caption}</figcaption>}
 </figure>
@@ -57,6 +77,16 @@ const { src, alt, caption, wide = false, narrow = false } = Astro.props;
 
   .figure--narrow {
     max-width: min(100%, 24rem);
+    margin-inline: auto;
+  }
+
+  /* Height-capped: the width follows from the aspect ratio, so a tall phone
+     screenshot sits at roughly phone size instead of filling the column and
+     running off the bottom of the window. */
+  .figure--tall img {
+    width: auto;
+    max-width: 100%;
+    max-block-size: min(72svh, 34rem);
     margin-inline: auto;
   }
 
