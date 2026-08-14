@@ -1,6 +1,6 @@
 ---
 title: 'Muse / WHAM: building a world model with creators'
-role: User discovery · Design & prototype development · Paper co-authorship · Communications
+role: Product scoping · User discovery & co-design · Defining model success metrics · Launch strategy & communications
 org: Microsoft Research
 timeframe: Jan 2023 – Feb 2025
 summary: >-
@@ -10,7 +10,7 @@ themes:
     - design-research
     - team-leadership
     - productization
-focus: Design research, leading multidisciplinary collaboration, productizing frontier AI research
+focus: Productizing frontier AI research, defining evaluation metrics, leading multidisciplinary collaboration
 cover: /media/01-muse-wham-world-model/omb-msr-hero.jpg
 coverAlt: >-
   Three Microsoft researchers in a lounge — one holding a game controller — watching a
@@ -245,6 +245,23 @@ The workshops identified iterative prototyping and divergent thinking as the tra
 practice the system had to support. Hands-on time in the Demonstrator showed us which of those the
 model could already deliver — and where it fell short. Read together, those translated into three
 machine learning requirements: the model's outputs needed to be consistent, diverse and persistent.
+
+**Consistent** — a generated sequence should be consistent with the established game dynamics and
+remain coherent throughout, with no sudden changes to characters or objects: characters should not
+pass through walls, and objects should not disappear without cause. Consistency is what lets a
+creator iterate and build on a sequence, which makes it the requirement underpinning iterative
+practice. We measured it with Fréchet Video Distance, using human gameplay as the ground truth.
+
+**Diverse** — the model should generate material that reflects a range of different potential
+outcomes, because diverse options are what spark new ideas. This is the requirement behind divergent
+thinking. From the same starting frames the model should produce genuinely different futures — in one
+the player circles the spawn point, in another they head straight for a jump pad. We measured it as
+the distance between the distribution of the model's actions and the actions real players took.
+
+**Persistent** — persistency gives creatives control over what the model produces, and is what
+enables iterative tweaking. The model has to be flexible enough to accept a modification to the game
+state and assimilate it into what it generates next: insert an object, a character or a map element
+into a frame, and it should still be there in what follows.
 
 <YouTubeEmbed
   id={YT.whatItProduced}

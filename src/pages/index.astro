@@ -81,8 +81,12 @@ const featured = await getFeaturedProjects();
   }
 
   .hero__statement {
-    max-width: 20ch;
-    font-size: var(--step-4);
+    /* Deliberately a step down from --step-4 (the h1 size used elsewhere).
+       At 105 characters this is a sentence, not a three-word banner, so it
+       reads better a little smaller and a little wider: four lines rather
+       than five, and roughly a third of the hero instead of half. */
+    max-width: 24ch;
+    font-size: clamp(2.25rem, 1.5rem + 3.2vw, 4rem);
     color: var(--hero-ink);
     text-shadow: 0 1px 30px rgba(70, 32, 20, 0.28);
   }

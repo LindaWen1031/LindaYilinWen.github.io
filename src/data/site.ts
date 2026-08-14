@@ -139,7 +139,6 @@ export const site = {
   /** Footer contact. Leave as '' to hide it; add a real address to show it. */
   email: '',
   links: [
-    // TODO: your LinkedIn handle goes on the end of this URL.
     { label: 'LinkedIn', url: 'https://www.linkedin.com/in/yilin-linda-wen/' },
     { label: 'Google Scholar', url: 'https://scholar.google.com/citations?user=uY5tPFIAAAAJ&hl=en' },
   ],

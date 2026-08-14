@@ -1,6 +1,6 @@
 ---
 title: 'Find My Things: a model is only as good as the system it underpins'
-role: Human-AI interaction design · Design research · First-author publication
+role: Leading model selection trade-offs · Defining system-level success metrics · Human-AI interaction design · Design research
 org: Microsoft Research
 timeframe: 2022 – 2024
 summary: >-
@@ -184,12 +184,20 @@ own carpet, on their own couch. When it failed they formed theories — *maybe m
 spot on a glass table because they are reflective* — re-recorded, and tried again. That loop is
 where personalisation actually happens, and its speed is set by how fast the model personalises.
 
-**We shipped EfficientNetB0 — the least accurate model.** Five percentage points of frame accuracy
-traded for a model 20x smaller, because personalisation and inference speed are what let a person
-close the loop, and closing the loop is what gets them to their keys.
+**I led the team through the trade-off rather than letting the benchmark settle it.** We worked
+through it together: which of latency or accuracy actually governs this experience, and what we could
+do to mitigate whichever one we gave up. Stronger onboarding to compensate for a weaker model.
+Restricting the feature to high-end phones that could carry a larger one — an option we rejected,
+since it would have put the feature out of reach of anyone on an older device.
+
+**That exercise took us to a collective decision: ship EfficientNetB0 — the least accurate model.**
+Five percentage points of frame accuracy traded for a model 20x smaller, because personalisation and
+inference speed are what let a person close the loop, and closing the loop is what gets them to their
+keys.
 
 > Think holistically about the metrics you use to evaluate the whole experience, rather than one
 > component of it (model performance).
+
 ### Challenge 2 — Users had no mental model of how a camera works
 
 In the user study I watched people position the phone in ways no sighted user would: aiming at the
@@ -221,7 +229,13 @@ cone, or that surveying a room means a slow pan rather than pointing at a place.
 **This is the failure mode no amount of model quality fixes.** No matter how good recognition gets,
 if a person cannot aim the camera, they cannot find their object.
 
-**The fix was onboarding we had assumed we would not need — and metaphor did most of the work.** We
+**So we invested in onboarding rather than accuracy.** This was one of the mitigations I had put on
+the table during the model trade-off, and the user study was the evidence for it: teaching people to
+pan the camera slowly and to record better training examples was cheaper than the engineering time it
+would have taken to optimise for a higher-accuracy model — and it worked on the bottleneck that
+actually stood between a user and their keys.
+
+**It was onboarding we had assumed we would not need — and metaphor did most of the work.** We
 reinforced the idea that the camera is *a pair of eyes*. The audio cues are *a metal detector*. Both
 import understanding people already have, and both carry the right implications: eyes point
 somewhere and have a field of view; a metal detector gets louder as you get closer. We built a
